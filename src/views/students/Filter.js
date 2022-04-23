@@ -1,26 +1,17 @@
 import React from 'react';
-import {
-    CCol,
-    CRow,
-    CFormSelect,
-    CInputGroup,
-    CInputGroupText,
-    CFormInput,
-    CTable,
-    CTableHead,
-    CTableRow,
-    CTableBody,
-    CTableHeaderCell,
-    CTableDataCell,
-} from '@coreui/react';
-const Dashboard = () => {
+import { CCol, CRow, CFormSelect, CInputGroup, CInputGroupText, CFormInput } from '@coreui/react';
+const Filter = (props) => {
     return (
         <>
-            <CRow xs={{ gutterX: 5 }}>
-                <CCol>One of three columns</CCol>
+            <CRow xs={{ gutterX: 2 }}>
+                <CCol>
+                    <h4>Danh sách học sinh</h4>
+                </CCol>
                 <CCol>
                     <CInputGroup className="mb-3">
-                        <CInputGroupText id="basic-addon1">@</CInputGroupText>
+                        <CInputGroupText id="basic-addon1" className="btn-outline-secondary">
+                            Năm học
+                        </CInputGroupText>
                         <CFormSelect
                             aria-label="Default select example"
                             options={[
@@ -34,7 +25,7 @@ const Dashboard = () => {
                 </CCol>
                 <CCol>
                     <CInputGroup className="mb-3">
-                        <CInputGroupText id="basic-addon1">@</CInputGroupText>
+                        <CInputGroupText id="basic-addon1">Độ tuổi</CInputGroupText>
                         <CFormSelect
                             aria-label="Default select example"
                             options={[
@@ -48,7 +39,7 @@ const Dashboard = () => {
                 </CCol>
                 <CCol>
                     <CInputGroup className="mb-3">
-                        <CInputGroupText id="basic-addon1">@</CInputGroupText>
+                        <CInputGroupText id="basic-addon1">Trạng thái</CInputGroupText>
                         <CFormSelect
                             aria-label="Default select example"
                             options={[
@@ -67,26 +58,8 @@ const Dashboard = () => {
                     </CInputGroup>
                 </CCol>
             </CRow>
-            <CRow>
-                <CTable>
-                    <CTableHead>
-                        <CTableRow>
-                            <CTableHeaderCell scope="col">Class</CTableHeaderCell>
-                            <CTableHeaderCell scope="col">Heading</CTableHeaderCell>
-                            <CTableHeaderCell scope="col">Heading</CTableHeaderCell>
-                        </CTableRow>
-                    </CTableHead>
-                    <CTableBody>
-                        <CTableRow>
-                            <CTableHeaderCell scope="row">Default</CTableHeaderCell>
-                            <CTableDataCell>Cell</CTableDataCell>
-                            <CTableDataCell>Cell</CTableDataCell>
-                        </CTableRow>
-                    </CTableBody>
-                </CTable>
-            </CRow>
         </>
     );
 };
 
-export default Dashboard;
+export default Filter;

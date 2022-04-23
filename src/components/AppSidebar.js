@@ -1,44 +1,47 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { CSidebar, CSidebarBrand, CSidebarNav, CSidebarToggler } from '@coreui/react';
-import CIcon from '@coreui/icons-react';
+import { CSidebar, CSidebarBrand, CSidebarNav, CSidebarToggler, CImage, CRow, CCol } from '@coreui/react';
 
 import { AppSidebarNav } from './AppSidebarNav';
 
-import { logoNegative } from 'src/assets/brand/logo-negative';
-import { sygnet } from 'src/assets/brand/sygnet';
+import sygnet from 'src/assets/logo.png';
 
 import SimpleBar from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
+import { OthersAction, OthersSelector } from 'src/redux/others/slice';
 
 // sidebar nav config
 import navigation from '../_nav';
 
 const AppSidebar = () => {
     const dispatch = useDispatch();
-    const unfoldable = useSelector((state) => state.sidebarUnfoldable);
-    const sidebarShow = useSelector((state) => state.sidebarShow);
-
+    const sidebarShow = useSelector(OthersSelector.sidebarShow);
+    const unfoldable = useSelector(OthersSelector.sidebarUnfoldable);
     return (
         <CSidebar
             position="fixed"
             unfoldable={unfoldable}
             visible={sidebarShow}
             onVisibleChange={(visible) => {
-                dispatch({ type: 'set', sidebarShow: visible });
+                dispatch(OthersAction.toggleSideBar(visible));
             }}
         >
             <CSidebarBrand className="d-none d-md-flex" to="/">
-                <CIcon className="sidebar-brand-full" icon={logoNegative} height={35} />
-                <CIcon className="sidebar-brand-narrow" icon={sygnet} height={35} />
+                <CImage className="sidebar-brand-narrow" src={sygnet} height={35} />
+                <div lg={9} className="sidebar-brand-full">
+                    <CCol className=" d-flex align-items-center justify-content-around">
+                        <CImage src={sygnet} height={40} />
+                        <h5>LMS APP</h5>
+                    </CCol>
+                </div>
             </CSidebarBrand>
             <CSidebarNav>
                 <SimpleBar>
                     <AppSidebarNav items={navigation} />
                 </SimpleBar>
             </CSidebarNav>
-            <CSidebarToggler className="d-none d-lg-flex" onClick={() => dispatch({ type: 'set', sidebarUnfoldable: !unfoldable })} />
+            <CSidebarToggler className="d-none d-lg-flex" onClick={() => dispatch(OthersAction.sidebarUnfoldable(!unfoldable))} />
         </CSidebar>
     );
 };
