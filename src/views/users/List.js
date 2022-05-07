@@ -7,11 +7,13 @@ const List = (props) => {
                 <CTable>
                     <CTableHead>
                         <CTableRow>
-                            <CTableHeaderCell>Mã chương trình</CTableHeaderCell>
-                            <CTableHeaderCell>Tên chương trình</CTableHeaderCell>
-                            <CTableHeaderCell>Số tiết học/tuần</CTableHeaderCell>
+                            <CTableHeaderCell>STT</CTableHeaderCell>
+                            <CTableHeaderCell>Họ tên</CTableHeaderCell>
+                            <CTableHeaderCell>Chức vụ</CTableHeaderCell>
+                            <CTableHeaderCell>Email</CTableHeaderCell>
+                            <CTableHeaderCell>Điện thoại</CTableHeaderCell>
                             <CTableHeaderCell>Trạng thái</CTableHeaderCell>
-                            <CTableHeaderCell>Hành động</CTableHeaderCell>
+                            <CTableHeaderCell></CTableHeaderCell>
                         </CTableRow>
                     </CTableHead>
                     <CTableBody>{props.children}</CTableBody>

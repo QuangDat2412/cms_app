@@ -1,25 +1,27 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
-import { login as loginApi, getCurrentUser } from 'src/apis/auth';
-import { loginActions } from './auth.slice';
+import { login as loginApi, googleLogin as googleLoginApi } from 'src/apis/auth';
+import { authActions } from './auth.slice';
 function* _login({ payload }) {
     function* doRQ() {
         const res = yield call(loginApi, payload);
         const { status, data } = res;
         if (status === 200) {
-            localStorage.setItem('token', data.accessToken);
-            yield put(loginActions.updateToken(data.accessToken));
+            localStorage.setItem('currentUser', JSON.stringify(data));
+            yield put(authActions.loginSuccess(data));
         } else {
             yield console(status, data);
         }
     }
     yield call(doRQ);
 }
-function* getUser() {
+function* _googleLogin({ payload }) {
     function* doRQ() {
-        const res = yield call(getCurrentUser);
+        const res = yield call(googleLoginApi, payload);
         const { status, data } = res;
+        console.log(data);
         if (status === 200) {
-            yield put(loginActions.getCurrentUserSuccess(data));
+            localStorage.setItem('currentUser', JSON.stringify(data));
+            yield put(authActions.loginSuccess(data));
         } else {
             yield console(status, data);
         }
@@ -27,9 +29,9 @@ function* getUser() {
     yield call(doRQ);
 }
 
-function* loginSaga() {
+function* authSaga() {
     // yield takeLatest(loginActions.login.type, _login);
-    yield takeEvery(loginActions.login.type, _login);
-    yield takeEvery(loginActions.getCurrentUser.type, getUser);
+    yield takeEvery(authActions.login.type, _login);
+    yield takeEvery(authActions.googleLogin.type, _googleLogin);
 }
-export default loginSaga;
+export default authSaga;

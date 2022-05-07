@@ -1,1 +1,37 @@
 // Here you can add other styles
+.login-btn {
+    margin-top: 30px;
+    & > div {
+        display: flex;
+        justify-content: center;
+    }
+    button {
+        min-width: 320px;
+        background-color: #fff !important;
+        border: 2px solid #dce0e3 !important;
+        border-radius: 44px !important;
+        color: #35414c;
+        font-size: 14px !important;
+        font-weight: 600;
+        line-height: 20px;
+        outline: 0;
+        text-align: center;
+        overflow: hidden;
+        box-shadow: none !important;
+        span {
+            font-size: 14px !important;
+            font-weight: 600 !important;
+            line-height: 20px;
+            padding: 6px 0 !important;
+            outline: 0;
+            text-align: center;
+        }
+        div {
+            padding-bottom: 6px !important;
+            padding-top: 6px !important;
+        }
+    }
+    div + div {
+        margin-top: 20px;
+    }
+}

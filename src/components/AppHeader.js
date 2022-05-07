@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { CContainer, CHeader, CHeaderBrand, CHeaderDivider, CHeaderNav, CHeaderToggler, CNavLink, CNavItem } from '@coreui/react';
 import CIcon from '@coreui/icons-react';
-import { cilBell, cilEnvelopeOpen, cilList, cilMenu } from '@coreui/icons';
+import { cilMenu } from '@coreui/icons';
 import { OthersAction, OthersSelector } from 'src/redux/others/slice';
 import { AppBreadcrumb } from './index';
 import { AppHeaderDropdown } from './header/index';
@@ -24,7 +24,7 @@ const AppHeader = () => {
                 </CHeaderBrand>
                 <CHeaderNav className="d-none d-md-flex me-auto">
                     <CNavItem>
-                        <CNavLink to="/programs" component={NavLink}>
+                        <CNavLink to="/courses" component={NavLink}>
                             Trang chủ
                         </CNavLink>
                     </CNavItem>

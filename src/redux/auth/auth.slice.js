@@ -1,30 +1,26 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    token: localStorage.getItem('token'),
-    user: {},
+    currentUser: JSON.parse(localStorage.getItem('currentUser')),
     isLoading: false,
+    isLogin: false,
 };
 
-const loginSlice = createSlice({
-    name: 'login',
+const authSlice = createSlice({
+    name: 'auth',
     initialState,
     reducers: {
-        updateToken(state, { payload }) {
-            state.token = payload;
+        loginSuccess(state, { payload }) {
+            state.currentUser = payload;
             state.isLoading = false;
         },
         login(state) {
             state.isLoading = true;
         },
-        getCurrentUser(state) {
+        googleLogin(state) {
             state.isLoading = true;
         },
 
-        getCurrentUserSuccess(state, { payload }) {
-            state.isLoading = false;
-            state.user = payload;
-        },
         logout(state) {
             localStorage.removeItem('token');
             state.token = null;
@@ -34,16 +30,16 @@ const loginSlice = createSlice({
 });
 
 // actions
-export const loginActions = loginSlice.actions;
+export const authActions = authSlice.actions;
 
 // selector
 
-export const loginSelector = {
-    token: (state) => state['login'].token,
-    isLoading: (state) => state['login'].isLoading,
-    user: (state) => state['login'].user,
+export const authSelector = {
+    isLoading: (state) => state['auth'].isLoading,
+    currentUser: (state) => state['auth'].currentUser,
+    isLogin: (state) => state['auth'].isLogin,
 };
 // reducer
-const loginReducer = loginSlice.reducer;
+const authReducer = authSlice.reducer;
 
-export default loginReducer;
+export default authReducer;

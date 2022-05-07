@@ -19,7 +19,7 @@ const AppContent = () => {
                                     )
                                 );
                             })}
-                            <Route path="/" element={<Navigate to="programs" replace />} />
+                            <Route path="/" element={<Navigate to="courses" replace />} />
                         </Routes>
                     </Suspense>
                 </CCardBody>

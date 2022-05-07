@@ -1,10 +1,14 @@
 import { createStore, compose, applyMiddleware, combineReducers } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 import { all } from 'redux-saga/effects';
-import loginReducer from './auth/auth.slice';
+import authReducer from './auth/auth.slice';
+import courseReducer from './course/course.slice';
+import userReducer from './user/user.slice';
 import othersSlice from './others/slice';
-import loginSaga from './auth/auth.saga';
-const rootReducer = combineReducers({ login: loginReducer, others: othersSlice });
+import authSaga from './auth/auth.saga';
+import courseSaga from './course/course.saga';
+import userSaga from './user/user.saga';
+const rootReducer = combineReducers({ auth: authReducer, others: othersSlice, courses: courseReducer, users: userReducer });
 const composeEnhancer =
     process.env.NODE_ENV !== 'production' && typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
         ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
@@ -14,7 +18,7 @@ const composeEnhancer =
 function* rootSaga() {
     console.log('rootSaga');
     try {
-        yield all([loginSaga()]);
+        yield all([authSaga(), courseSaga(), userSaga()]);
     } catch (err) {
         // eslint-disable-next-line no-console
         console.trace(err);

@@ -1,16 +1,16 @@
 import React from 'react';
 
-const Student = React.lazy(() => import('./views/students'));
-const Program = React.lazy(() => import('./views/programs'));
-const NewProgram = React.lazy(() => import('./views/programs/newProgram'));
-const ProgramDetails = React.lazy(() => import('./views/programs/programDetail'));
+const User = React.lazy(() => import('./views/users'));
+const Course = React.lazy(() => import('./views/courses'));
+const NewCourse = React.lazy(() => import('./views/courses/newCourse'));
+const CourseDetails = React.lazy(() => import('./views/courses/courseDetail'));
 
 const routes = [
     { path: '/', exact: true, name: 'Trang chủ' },
-    { path: '/students', name: 'Danh sách học sinh', element: Student },
-    { path: '/programs/new', name: 'Thêm mới chương trình', element: NewProgram },
-    { path: '/programs/:code', name: 'Chi tiết chương trình', element: ProgramDetails },
-    { path: '/programs', name: 'Chương trình học', element: Program },
+    { path: '/students', name: 'Danh sách người dùng', element: User },
+    { path: '/courses/new', name: 'Thêm mới khóa', element: NewCourse },
+    { path: '/courses/:code', name: 'Chi tiết khóa', element: CourseDetails },
+    { path: '/courses', name: 'Khóa học', element: Course },
 ];
 
 export default routes;

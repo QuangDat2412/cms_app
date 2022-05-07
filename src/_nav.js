@@ -6,8 +6,8 @@ import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react';
 const _nav = [
     {
         component: CNavItem,
-        name: 'Chương trình học',
-        to: '/programs',
+        name: 'Khóa học',
+        to: '/courses',
         icon: <CIcon icon={cilBook} customClassName="nav-icon" />,
         badge: {
             color: 'info',
@@ -15,7 +15,7 @@ const _nav = [
     },
     {
         component: CNavItem,
-        name: 'Danh sách học sinh',
+        name: 'Danh sách người dùng',
         to: '/students',
         icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
         badge: {
