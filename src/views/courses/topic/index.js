@@ -9,7 +9,6 @@ import {
     CModal,
     CButton,
     CFormInput,
-    CRow,
     CCol,
     CModalFooter,
     CFormSelect,
@@ -17,22 +16,23 @@ import {
 } from '@coreui/react';
 import { useDispatch, useSelector } from 'react-redux';
 import { courseActions, courseSelector } from 'src/redux/course/course.slice';
-import { OthersSelector } from 'src/redux/others/slice';
 import TableCustom from 'src/components/table';
-import { useNavigate } from 'react-router-dom';
-const Courses = () => {
-    let navigate = useNavigate();
-    const courseForm = { name: '', code: '123', status: 1, type: '' };
-    const [inputs, setInputs] = useState({ ...courseForm });
-    const filterForm = { name: '', status: 0 };
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+const Topics = () => {
+    const topicForm = { name: '', courseId: '', description: '', image: '', listLessons: [] };
+    const [inputs, setInputs] = useState({ ...topicForm });
+    const filterForm = { name: '', courseId: '0' };
     const [filter, setFilter] = useState(filterForm);
-    const options = useSelector(OthersSelector.options);
-    const typeCourse = options?.typeCourse || [];
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(courseActions.getCourse(filter));
+        dispatch(courseActions.getCourse({ name: '', status: 1 }));
+    }, [dispatch]);
+    useEffect(() => {
+        dispatch(courseActions.getTopic(filter));
     }, [filter, dispatch]);
     const courses = useSelector(courseSelector.courses);
+    const topics = useSelector(courseSelector.topics);
     const [visible, setVisible] = useState(false);
     const [validated, setValidated] = useState(false);
     const [actionType, setActionType] = useState('');
@@ -42,28 +42,20 @@ const Courses = () => {
         });
     }, []);
 
-    const makeCode = (n) => {
-        var text = '';
-        var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-
-        for (var i = 0; i < n; i++) text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-        return text;
-    };
-
-    const openMoDalAdd = (course, type) => {
+    const openMoDalAdd = (topic, type) => {
         if (type === 'update') {
-            const _course = { ...course };
-            setInputs(_course);
+            const _topic = { ...topic };
+            setInputs(_topic);
         } else if (type === 'add') {
-            setInputs({ ...courseForm, code: makeCode(6) });
+            setInputs({ ...topicForm });
         }
         setActionType(type);
+        console.log(topic);
         setVisible(true);
     };
     const data = {
-        data: courses.map((c, i) => {
-            return { ...c, type: c.type.name };
+        data: topics.map((c, i) => {
+            return { ...c, course: c.courseId?.name, index: i + 1 };
         }),
         actions: [
             {
@@ -73,32 +65,24 @@ const Courses = () => {
                     return openMoDalAdd(user, type);
                 },
             },
-            {
-                key: 'detail',
-                value: 'Nội dung khóa học',
-                openMoDalAdd: function (data) {
-                    navigate('/courses/' + data.code, { replace: true });
-                    console.log(data);
-                },
-            },
         ],
         header: [
             {
-                key: 'code',
-                value: 'Mã khóa học',
+                key: 'index',
+                value: 'Số thứ tự',
             },
             {
                 key: 'name',
-                value: 'Tên khóa học',
+                value: 'Tên chủ đề',
             },
             {
-                key: 'type',
-                value: 'Loại khóa học',
+                key: 'course',
+                value: 'Khoá học',
             },
             {
-                key: 'status',
-                value: 'Trạng thái',
-                type: 'status',
+                key: 'description',
+                value: 'Mô tả',
+                type: 'html',
             },
         ],
     };
@@ -111,10 +95,10 @@ const Courses = () => {
         event.preventDefault();
         const form = event.currentTarget;
         if (form.checkValidity()) {
-            Promise.resolve(dispatch(courseActions.saveCourse(inputs)))
+            Promise.resolve(dispatch(courseActions.saveTopic(inputs)))
                 .then((data) => {
                     closeModal();
-                    dispatch(courseActions.getCourse(filter));
+                    dispatch(courseActions.getTopic(filter));
                 })
                 .catch(() => {});
         }
@@ -126,35 +110,25 @@ const Courses = () => {
     };
     return (
         <>
-            <Filter openMoDalAdd={openMoDalAdd} handleChangeFilter={handleChangeFilter} />
+            <Filter openMoDalAdd={openMoDalAdd} handleChangeFilter={handleChangeFilter} courses={courses} />
             <TableCustom datas={data} />
+
             <CModal visible={visible} onClose={() => setVisible(false)} size="lg">
                 <CModalHeader onClose={() => setVisible(false)}>
-                    <CModalTitle>{actionType === 'add' ? 'Thêm mới khóa học' : 'Chỉnh sửa khóa học'}</CModalTitle>
+                    <CModalTitle>{actionType === 'add' ? 'Thêm mới chủ đề' : 'Chỉnh sửa chủ đề'}</CModalTitle>
                 </CModalHeader>
                 <CModalBody>
                     <CForm className="row g-3 needs-validation" noValidate validated={validated} onSubmit={saveCourse}>
                         <CCol lg="6">
-                            <CFormLabel htmlFor="validationServerUsername">Tên khóa học</CFormLabel>
+                            <CFormLabel htmlFor="validationServerUsername">Tên chủ đề</CFormLabel>
                             <CFormInput type="text" label="Tên khóa học" required name="name" onChange={handleChange} value={inputs.name} />
                             <CFormFeedback invalid>Vui lòng nhập tên khóa học.</CFormFeedback>
                         </CCol>
                         <CCol lg="6">
-                            <CFormLabel htmlFor="validationServerUsername">Code</CFormLabel>
-                            <CFormInput type="text" label="Code" required name="code" disabled={true} value={inputs.code} />
-                        </CCol>
-                        <CCol lg="6">
-                            <CFormLabel htmlFor="validationServerUsername">Trạng thái</CFormLabel>
-                            <CFormSelect required onChange={handleChange} name="status" value={inputs.status}>
-                                <option value="1">Đang hoạt động</option>
-                                <option value="2">Ngừng hoạt động</option>
-                            </CFormSelect>
-                        </CCol>
-                        <CCol lg="6">
-                            <CFormLabel htmlFor="validationServerUsername">Loại khóa học</CFormLabel>
-                            <CFormSelect required name="type" onChange={handleChange} value={inputs.type}>
+                            <CFormLabel htmlFor="validationServerUsername">Khóa học</CFormLabel>
+                            <CFormSelect required name="courseId" onChange={handleChange} value={inputs.courseId}>
                                 <option value="">Chọn khóa học</option>
-                                {typeCourse.map((t) => {
+                                {courses.map((t) => {
                                     return (
                                         <option value={t._id} key={t._id}>
                                             {t.name}
@@ -162,9 +136,21 @@ const Courses = () => {
                                     );
                                 })}
                             </CFormSelect>
-                            <CFormFeedback invalid>Vui lòng chọn loại khóa học.</CFormFeedback>
+                            <CFormFeedback invalid>Vui lòng chọn khóa học.</CFormFeedback>
                         </CCol>
-
+                        <CCol lg="12">
+                            <CFormLabel htmlFor="validationServerUsername">Mô tả</CFormLabel>
+                            <CKEditor
+                                editor={ClassicEditor}
+                                data={inputs.description}
+                                onChange={(event, editor) => {
+                                    const data = editor.getData();
+                                    setInputs((prev) => {
+                                        return { ...prev, description: data };
+                                    });
+                                }}
+                            />
+                        </CCol>
                         <CModalFooter>
                             <CButton color="secondary" onClick={() => setVisible(false)}>
                                 Đóng
@@ -180,4 +166,4 @@ const Courses = () => {
     );
 };
 
-export default Courses;
+export default Topics;

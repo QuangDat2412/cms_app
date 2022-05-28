@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { CButton, CCard, CCardBody, CCardGroup, CCol, CContainer, CForm, CFormInput, CInputGroup, CInputGroupText, CRow } from '@coreui/react';
+import { CButton, CCard, CCardBody, CCol, CContainer, CForm, CFormInput, CInputGroup, CInputGroupText, CRow } from '@coreui/react';
 import CIcon from '@coreui/icons-react';
 import GoogleLogin from 'react-google-login';
 import { useDispatch } from 'react-redux';
 import { authActions } from 'src/redux/auth/auth.slice';
+import { OthersAction } from 'src/redux/others/slice';
 import { cilUser, cilLockLocked } from '@coreui/icons';
 
 const Login = () => {
     const dispatch = useDispatch();
     const responseSuccessGoogle = (res) => {
-        dispatch(authActions.googleLogin({ tokenId: res.tokenId }));
+        Promise.resolve(dispatch(authActions.googleLogin({ tokenId: res.tokenId }))).then(() => {
+            dispatch(OthersAction.getOptions());
+        });
     };
 
     const [validated, setValidated] = useState(false);
@@ -20,7 +22,9 @@ const Login = () => {
         event.preventDefault();
         const form = event.currentTarget;
         if (form.checkValidity()) {
-            dispatch(authActions.login({ email, password }));
+            Promise.resolve(dispatch(authActions.login({ email, password }))).then(() => {
+                dispatch(OthersAction.getOptions());
+            });
         }
         setValidated(true);
     };

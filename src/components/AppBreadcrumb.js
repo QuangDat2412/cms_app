@@ -30,7 +30,6 @@ const AppBreadcrumb = () => {
     };
 
     const breadcrumbs = getBreadcrumbs(currentLocation);
-
     return (
         <CBreadcrumb className="m-0 ms-2">
             <CBreadcrumbItem href="/">Trang chủ</CBreadcrumbItem>

@@ -2,6 +2,8 @@ import React from 'react';
 import CIcon from '@coreui/icons-react';
 import { CCol, CRow, CFormSelect, CInputGroup, CInputGroupText, CFormInput, CButton } from '@coreui/react';
 import { cilPlus, cilSearch } from '@coreui/icons';
+import PropTypes from 'prop-types';
+
 const Filter = (props) => {
     const { openMoDalAdd, handleChangeFilter } = props;
     const open = (event) => {
@@ -31,9 +33,9 @@ const Filter = (props) => {
                             onChange={handleChangeFilter}
                             name="status"
                             options={[
-                                { label: 'Tất cả', value: '' },
+                                { label: 'Tất cả', value: '0' },
                                 { label: 'Đang hoạt động', value: '1' },
-                                { label: 'Ngừng hoạt động', value: '0' },
+                                { label: 'Ngừng hoạt động', value: '2' },
                             ]}
                         />
                     </CInputGroup>
@@ -50,5 +52,8 @@ const Filter = (props) => {
         </>
     );
 };
-
+Filter.propTypes = {
+    openMoDalAdd: PropTypes.func,
+    handleChangeFilter: PropTypes.func,
+};
 export default Filter;

@@ -1,7 +1,7 @@
-import { call, put, takeEvery } from 'redux-saga/effects';
+import { call, put, takeEvery, debounce } from 'redux-saga/effects';
 import { getAll, saveUser } from 'src/apis/user';
 import { userActions } from './user.slice';
-
+import { callLoading } from '../others/saga';
 function* getUser({ payload }) {
     function* doRQ() {
         const res = yield call(getAll, payload);
@@ -12,7 +12,7 @@ function* getUser({ payload }) {
             yield console(status, data);
         }
     }
-    yield call(doRQ);
+    yield callLoading(doRQ);
 }
 function* addUser({ payload }) {
     const { inputs, type } = payload;
@@ -29,10 +29,10 @@ function* addUser({ payload }) {
             yield console(status, data);
         }
     }
-    yield call(doRQ);
+    yield callLoading(doRQ);
 }
 function* userSaga() {
-    yield takeEvery(userActions.getUser.type, getUser);
+    yield debounce(300, userActions.getUser.type, getUser);
     yield takeEvery(userActions.saveUser.type, addUser);
 }
 export default userSaga;

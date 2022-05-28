@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { CSidebar, CSidebarBrand, CSidebarNav, CSidebarToggler, CImage, CRow, CCol } from '@coreui/react';
+import { CSidebar, CSidebarBrand, CSidebarNav, CSidebarToggler, CImage, CCol } from '@coreui/react';
 
 import { AppSidebarNav } from './AppSidebarNav';
 
@@ -17,11 +17,9 @@ import navigation from '../_nav';
 const AppSidebar = () => {
     const dispatch = useDispatch();
     const sidebarShow = useSelector(OthersSelector.sidebarShow);
-    const unfoldable = useSelector(OthersSelector.sidebarUnfoldable);
     return (
         <CSidebar
             position="fixed"
-            unfoldable={unfoldable}
             visible={sidebarShow}
             onVisibleChange={(visible) => {
                 dispatch(OthersAction.toggleSideBar(visible));
@@ -41,7 +39,6 @@ const AppSidebar = () => {
                     <AppSidebarNav items={navigation} />
                 </SimpleBar>
             </CSidebarNav>
-            <CSidebarToggler className="d-none d-lg-flex" onClick={() => dispatch(OthersAction.sidebarUnfoldable(!unfoldable))} />
         </CSidebar>
     );
 };

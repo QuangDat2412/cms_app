@@ -1,17 +1,25 @@
 import React from 'react';
 import CIcon from '@coreui/icons-react';
-import { cilPuzzle, cilSpeedometer, cilBook } from '@coreui/icons';
-import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react';
+import { cilSpeedometer, cilBook } from '@coreui/icons';
+import { CNavItem, CNavGroup } from '@coreui/react';
 
 const _nav = [
     {
-        component: CNavItem,
+        component: CNavGroup,
         name: 'Khóa học',
-        to: '/courses',
         icon: <CIcon icon={cilBook} customClassName="nav-icon" />,
-        badge: {
-            color: 'info',
-        },
+        items: [
+            {
+                component: CNavItem,
+                name: 'Danh sách khóa học',
+                to: '/courses',
+            },
+            {
+                component: CNavItem,
+                name: 'Chủ đề',
+                to: '/topics',
+            },
+        ],
     },
     {
         component: CNavItem,

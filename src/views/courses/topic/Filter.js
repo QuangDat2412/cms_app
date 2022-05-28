@@ -1,10 +1,10 @@
 import React from 'react';
-import { CCol, CRow, CFormSelect, CInputGroup, CInputGroupText, CFormInput, CButton } from '@coreui/react';
+import { CCol, CRow, CInputGroup, CInputGroupText, CFormInput, CButton, CFormSelect } from '@coreui/react';
 import CIcon from '@coreui/icons-react';
 import { cilPlus } from '@coreui/icons';
 import PropTypes from 'prop-types';
 const Filter = (props) => {
-    const { openMoDalAdd, handleChangeFilter } = props;
+    const { openMoDalAdd, handleChangeFilter, courses } = props;
     const open = (event) => {
         event.preventDefault();
         openMoDalAdd({}, 'add');
@@ -15,7 +15,7 @@ const Filter = (props) => {
                 <CCol lg={6}>
                     <CRow>
                         <CCol lg={4} xs={6}>
-                            <h4>Khóa học</h4>
+                            <h4>Danh sách chủ đề</h4>
                         </CCol>
                         <CCol lg={8} xs={6}>
                             <CButton type="button" color="secondary" variant="outline" id="button-addon1" onClick={open}>
@@ -26,17 +26,19 @@ const Filter = (props) => {
                 </CCol>
                 <CCol lg={3}>
                     <CInputGroup className="mb-3">
-                        <CInputGroupText id="basic-addon1">Trạng thái</CInputGroupText>
-                        <CFormSelect
-                            aria-label="Default select example"
-                            onChange={handleChangeFilter}
-                            name="status"
-                            options={[
-                                { label: 'Tất cả', value: '0' },
-                                { label: 'Đang hoạt động', value: '1' },
-                                { label: 'Ngừng hoạt động', value: '2' },
-                            ]}
-                        />
+                        <CInputGroupText id="basic-addon1">Khóa học</CInputGroupText>
+                        <CFormSelect onChange={handleChangeFilter} name="courseId">
+                            <option value={0} key={-1}>
+                                Tất cả
+                            </option>
+                            {courses.map((t) => {
+                                return (
+                                    <option value={t._id} key={t._id}>
+                                        {t.name}
+                                    </option>
+                                );
+                            })}
+                        </CFormSelect>
                     </CInputGroup>
                 </CCol>
                 <CCol lg={3}>
@@ -52,5 +54,6 @@ const Filter = (props) => {
 Filter.propTypes = {
     openMoDalAdd: PropTypes.func,
     handleChangeFilter: PropTypes.func,
+    courses: PropTypes.array,
 };
 export default Filter;

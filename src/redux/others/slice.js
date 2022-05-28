@@ -4,6 +4,7 @@ const initialState = {
     isLoading: false,
     sidebarShow: true,
     sidebarUnfoldable: true,
+    options: JSON.parse(localStorage.getItem('options')),
 };
 
 const othersSlice = createSlice({
@@ -19,6 +20,10 @@ const othersSlice = createSlice({
         sidebarUnfoldable: (state, { payload }) => {
             state.sidebarShow = payload;
         },
+        getOptions: () => {},
+        saveOptions: (state, { payload }) => {
+            state.options = payload;
+        },
     },
 });
 
@@ -27,6 +32,7 @@ export const OthersSelector = {
     isLoading: (state) => state['others'].isLoading,
     sidebarShow: (state) => state['others'].sidebarShow,
     sidebarUnfoldable: (state) => state['others'].sidebarUnfoldable,
+    options: (state) => state['others'].options,
 };
 
 export default othersSlice.reducer;

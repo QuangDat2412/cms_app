@@ -1,6 +1,8 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
 import { login as loginApi, googleLogin as googleLoginApi } from 'src/apis/auth';
 import { authActions } from './auth.slice';
+import { callLoading } from '../others/saga';
+
 function* _login({ payload }) {
     function* doRQ() {
         const res = yield call(loginApi, payload);
@@ -12,7 +14,7 @@ function* _login({ payload }) {
             yield console(status, data);
         }
     }
-    yield call(doRQ);
+    yield callLoading(doRQ);
 }
 function* _googleLogin({ payload }) {
     function* doRQ() {
@@ -26,7 +28,7 @@ function* _googleLogin({ payload }) {
             yield console(status, data);
         }
     }
-    yield call(doRQ);
+    yield callLoading(doRQ);
 }
 
 function* authSaga() {

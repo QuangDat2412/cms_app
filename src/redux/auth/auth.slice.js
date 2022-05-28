@@ -2,7 +2,6 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     currentUser: JSON.parse(localStorage.getItem('currentUser')),
-    isLoading: false,
     isLogin: false,
 };
 
@@ -12,15 +11,9 @@ const authSlice = createSlice({
     reducers: {
         loginSuccess(state, { payload }) {
             state.currentUser = payload;
-            state.isLoading = false;
         },
-        login(state) {
-            state.isLoading = true;
-        },
-        googleLogin(state) {
-            state.isLoading = true;
-        },
-
+        login(state) {},
+        googleLogin(state) {},
         logout(state) {
             localStorage.removeItem('token');
             state.token = null;
@@ -35,7 +28,6 @@ export const authActions = authSlice.actions;
 // selector
 
 export const authSelector = {
-    isLoading: (state) => state['auth'].isLoading,
     currentUser: (state) => state['auth'].currentUser,
     isLogin: (state) => state['auth'].isLogin,
 };

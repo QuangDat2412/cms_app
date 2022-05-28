@@ -8,6 +8,7 @@ import othersSlice from './others/slice';
 import authSaga from './auth/auth.saga';
 import courseSaga from './course/course.saga';
 import userSaga from './user/user.saga';
+import otherSaga from './others/saga';
 const rootReducer = combineReducers({ auth: authReducer, others: othersSlice, courses: courseReducer, users: userReducer });
 const composeEnhancer =
     process.env.NODE_ENV !== 'production' && typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
@@ -18,7 +19,7 @@ const composeEnhancer =
 function* rootSaga() {
     console.log('rootSaga');
     try {
-        yield all([authSaga(), courseSaga(), userSaga()]);
+        yield all([authSaga(), courseSaga(), userSaga(), otherSaga()]);
     } catch (err) {
         // eslint-disable-next-line no-console
         console.trace(err);

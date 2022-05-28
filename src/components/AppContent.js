@@ -1,13 +1,13 @@
 import React, { Suspense } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
-import { CContainer, CSpinner, CCard, CCardBody } from '@coreui/react';
+import { CSpinner, CCard, CCardBody } from '@coreui/react';
 
 // routes config
 import routes from '../routes';
 
 const AppContent = () => {
     return (
-        <CContainer lg>
+        <div>
             <CCard>
                 <CCardBody>
                     <Suspense fallback={<CSpinner color="primary" />}>
@@ -24,7 +24,7 @@ const AppContent = () => {
                     </Suspense>
                 </CCardBody>
             </CCard>
-        </CContainer>
+        </div>
     );
 };
 

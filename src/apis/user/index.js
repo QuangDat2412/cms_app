@@ -1,4 +1,4 @@
-import { publicRequest, userRequest } from 'src/services/axiosServices';
+import { userRequest } from 'src/services/axiosServices';
 const LIST_URL = {
     GetAll: `/users/getAll`,
     SaveUser: `/users/addUser`,
