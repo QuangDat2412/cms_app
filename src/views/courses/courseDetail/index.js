@@ -13,8 +13,6 @@ import {
     CTableBody,
     CTableRow,
     CTableDataCell,
-} from '@coreui/react';
-import {
     CFormLabel,
     CForm,
     CModalTitle,
@@ -24,9 +22,9 @@ import {
     CButton,
     CFormInput,
     CModalFooter,
-    CFormSelect,
     CFormFeedback,
 } from '@coreui/react';
+
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import './index.scss';
@@ -105,7 +103,7 @@ const CourseDetail = () => {
                                 <CAccordionItem itemKey={i} key={i}>
                                     <CAccordionHeader>{t.name}</CAccordionHeader>
                                     <CAccordionBody>
-                                        <CTable cTable hover class="mb-0">
+                                        <CTable className="mb-0">
                                             <CTableBody>
                                                 {t.listLessons.map((l, i) => {
                                                     return (
@@ -136,7 +134,7 @@ const CourseDetail = () => {
                                                 })}
                                             </CTableBody>
                                         </CTable>
-                                        <CButton
+                                        {/* <CButton
                                             color="warning"
                                             onClick={() => {
                                                 openMoDalAdd({}, 'add', t._id);
@@ -144,7 +142,7 @@ const CourseDetail = () => {
                                             className="mt-3"
                                         >
                                             Thêm bài học
-                                        </CButton>
+                                        </CButton> */}
                                     </CAccordionBody>
                                 </CAccordionItem>
                             );
@@ -197,12 +195,12 @@ const CourseDetail = () => {
             </CModal>
             <CModal visible={visible1} onClose={() => setVisible1(false)} size="lg">
                 <CModalHeader onClose={() => setVisible1(false)}>
-                    <CModalTitle>Bai hoc</CModalTitle>
+                    <CModalTitle>Bài học: {lesson.name}</CModalTitle>
                 </CModalHeader>
                 <CModalBody>
                     <div className="player-doc">
                         <div className="player">
-                            <iframe width="100%" height="100%" src={lesson.url}></iframe>
+                            <iframe width="100%" height="100%" src={lesson.url} title={lesson.name}></iframe>
                         </div>
                     </div>
                 </CModalBody>

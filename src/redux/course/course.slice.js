@@ -10,17 +10,14 @@ const courseSlice = createSlice({
     name: 'course',
     initialState,
     reducers: {
-        saveCourseSuccess(state, { payload }) {
-            state.courses = [...state.courses, payload];
-        },
         saveCourse() {},
         saveTopic() {},
         saveLesson() {},
-        saveTopicSuccess(state, { payload }) {
-            state.topics = [...state.courses, payload];
-        },
         getCourseSuccess(state, { payload }) {
-            state.courses = payload;
+            state.courses = payload.map((p) => {
+                return { ...p, typeObj: p.type, type: p.type._id };
+            });
+            console.log(state.courses);
         },
         getCourseByCodeSuccess(state, { payload }) {
             state.course = payload;
@@ -29,7 +26,9 @@ const courseSlice = createSlice({
         getCourseByCode() {},
         getTopic() {},
         getTopicSuccess(state, { payload }) {
-            state.topics = payload;
+            state.topics = payload.map((p) => {
+                return { ...p, course: p.courseId, courseId: p.courseId._id };
+            });
         },
     },
 });

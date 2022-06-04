@@ -55,7 +55,7 @@ const Topics = () => {
     };
     const data = {
         data: topics.map((c, i) => {
-            return { ...c, course: c.courseId?.name, index: i + 1 };
+            return { ...c, course: c.course?.name, index: i + 1 };
         }),
         actions: [
             {

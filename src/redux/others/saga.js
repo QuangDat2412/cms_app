@@ -4,22 +4,24 @@ import { getAll } from 'src/apis/options';
 
 export function* callLoading(functionIsCalled) {
     yield put(OthersAction.changePageLoading(true));
-    yield call(functionIsCalled);
-    yield delay(100);
-    yield put(OthersAction.changePageLoading(false));
+    try {
+        yield call(functionIsCalled);
+        yield delay(100);
+        yield put(OthersAction.changePageLoading(false));
+    } catch (error) {
+        yield put(OthersAction.changePageLoading(false));
+    }
 }
 function* _getOptions({ payload }) {
     function* doRQ() {
-        const res = yield call(getAll, payload);
-        const { status, data } = res;
-        if (status === 200) {
+        try {
+            const res = yield call(getAll, payload);
+            const { data } = res;
             localStorage.setItem('options', JSON.stringify(data));
             yield put(OthersAction.saveOptions(data));
-        } else {
-            yield console(status, data);
-        }
+        } catch (error) {}
     }
-    yield callLoading(doRQ);
+    yield call(doRQ);
 }
 function* otherSaga() {
     yield takeEvery(OthersAction.getOptions.type, _getOptions);

@@ -1,36 +1,51 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './index.scss';
-const TableCustom = ({ type, openMoDalAdd }) => {
-    const uploadImage = () => {
+import avatar from 'src/assets/default-avatar.png';
+import thumbnail from 'src/assets/default.png';
+import { uploadImage } from 'src/apis/options';
+import CIcon from '@coreui/icons-react';
+import { cilPlus } from '@coreui/icons';
+import { DOMAIN } from 'src/constants/api';
+
+const UploadImage = ({ setUrl, type, url }) => {
+    const _uploadImage = () => {
         let inputTag = document.createElement('input');
         inputTag.type = 'file';
         inputTag.accept = 'image/png, image/jpeg';
         inputTag.onchange = (_this) => {
             let files = _this.target.files;
-            this.shareService
-                .upload(files, this.folder)
-                .then((res) => {})
-                .catch((e) => {
-                    console.log(e);
-                });
+            let fileToUpload = files[0];
+            const formData = new FormData();
+            formData.append('file', fileToUpload);
+            formData.append('name', fileToUpload.name);
+            uploadImage(formData)
+                .then((res) => {
+                    setUrl(DOMAIN + res.data);
+                })
+                .catch(() => {});
         };
         inputTag.click();
     };
+    const className = 'box-img ' + (type === 'thumbnail' ? 'thumbnail' : 'avatar');
+    console.log(url);
     return (
         <>
-            <div className={('box-img', type == 'thumbnail' ? 'thumbnail' : 'avatar')}>
+            <div className={className}>
                 <div className="img">
-                    {type == 'thumbnail' ? (
-                        <img onError="this.src='assets/default.png'" alt="" />
-                    ) : (
-                        <img onError="this.src='assets/default-avatar.png'" alt="" />
-                    )}
+                    <img
+                        onError={({ currentTarget }) => {
+                            currentTarget.onerror = null; // prevents looping
+                            currentTarget.src = type === 'thumbnail' ? thumbnail : avatar;
+                        }}
+                        src={url}
+                        alt=""
+                    />
                 </div>
-                <div className="caption" onClick={uploadImage}>
+                <div className="caption" onClick={_uploadImage}>
                     <div className="file-input-wrapper">
                         <div className="btn-file-input">
-                            <svg cIcon name="cilPlus" size="lg"></svg>
+                            <CIcon icon={cilPlus} />
                         </div>
                     </div>
                 </div>
@@ -38,8 +53,9 @@ const TableCustom = ({ type, openMoDalAdd }) => {
         </>
     );
 };
-TableCustom.propTypes = {
+UploadImage.propTypes = {
+    setUrl: PropTypes.func,
     type: PropTypes.string,
-    openMoDalAdd: PropTypes.func,
+    url: PropTypes.string,
 };
-export default TableCustom;
+export default UploadImage;

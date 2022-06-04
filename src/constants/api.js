@@ -5,4 +5,5 @@ const getApiLinkByEnv = (localUrl, deployUrl) => {
     return localUrl;
 };
 
-export const API_ENPOINT = getApiLinkByEnv('http://localhost:2412/api/');
+export const API_ENDPOINT = getApiLinkByEnv('http://localhost:2412/api/');
+export const DOMAIN = getApiLinkByEnv('http://localhost:2412/');

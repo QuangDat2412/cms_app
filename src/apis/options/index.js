@@ -1,6 +1,7 @@
 import { userRequest } from 'src/services/axiosServices';
 const LIST_URL = {
     GetAll: `/options`,
-    SaveUser: `/users/addUser`,
+    UPLOAD_IMAGE: `/upload/images`,
 };
-export const getAll = (model) => userRequest.get(LIST_URL.GetAll);
+export const getAll = () => userRequest.get(LIST_URL.GetAll);
+export const uploadImage = (model) => userRequest.post(LIST_URL.UPLOAD_IMAGE, model);

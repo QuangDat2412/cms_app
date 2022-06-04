@@ -5,25 +5,13 @@ import { callLoading } from '../others/saga';
 
 function* add({ payload }) {
     function* doRQ() {
-        const res = yield call(addCourse, payload);
-        const { status, data } = res;
-        if (status === 200) {
-            yield put(courseActions.saveCourseSuccess(data));
-        } else {
-            yield console(status, data);
-        }
+        yield call(addCourse, payload);
     }
     yield callLoading(doRQ);
 }
 function* _addTopic({ payload }) {
     function* doRQ() {
-        const res = yield call(addTopic, payload);
-        const { status, data } = res;
-        if (status === 200) {
-            yield put(courseActions.saveTopicSuccess(data));
-        } else {
-            yield console(status, data);
-        }
+        yield call(addTopic, payload);
     }
     yield callLoading(doRQ);
 }
@@ -35,37 +23,31 @@ function* _addLesson({ payload }) {
 }
 function* get({ payload }) {
     function* doRQ() {
-        const res = yield call(getCourse, payload);
-        const { status, data } = res;
-        if (status === 200) {
+        try {
+            const res = yield call(getCourse, payload);
+            const { data } = res;
             yield put(courseActions.getCourseSuccess(data));
-        } else {
-            yield console(status, data);
-        }
+        } catch (error) {}
     }
     yield callLoading(doRQ);
 }
 function* _getTopic({ payload }) {
     function* doRQ() {
-        const res = yield call(getTopic, payload);
-        const { status, data } = res;
-        if (status === 200) {
+        try {
+            const res = yield call(getTopic, payload);
+            const { data } = res;
             yield put(courseActions.getTopicSuccess(data));
-        } else {
-            yield console(status, data);
-        }
+        } catch (error) {}
     }
     yield callLoading(doRQ);
 }
 function* getByCode({ payload }) {
     function* doRQ() {
-        const res = yield call(getCourseByCode, payload);
-        const { status, data } = res;
-        if (status === 200) {
+        try {
+            const res = yield call(getCourseByCode, payload);
+            const { data } = res;
             yield put(courseActions.getCourseByCodeSuccess(data));
-        } else {
-            yield console(status, data);
-        }
+        } catch (error) {}
     }
     yield callLoading(doRQ);
 }

@@ -5,28 +5,23 @@ import { callLoading } from '../others/saga';
 
 function* _login({ payload }) {
     function* doRQ() {
-        const res = yield call(loginApi, payload);
-        const { status, data } = res;
-        if (status === 200) {
+        try {
+            const res = yield call(loginApi, payload);
+            const { data } = res;
             localStorage.setItem('currentUser', JSON.stringify(data));
             yield put(authActions.loginSuccess(data));
-        } else {
-            yield console(status, data);
-        }
+        } catch (error) {}
     }
     yield callLoading(doRQ);
 }
 function* _googleLogin({ payload }) {
     function* doRQ() {
-        const res = yield call(googleLoginApi, payload);
-        const { status, data } = res;
-        console.log(data);
-        if (status === 200) {
+        try {
+            const res = yield call(googleLoginApi, payload);
+            const { data } = res;
             localStorage.setItem('currentUser', JSON.stringify(data));
             yield put(authActions.loginSuccess(data));
-        } else {
-            yield console(status, data);
-        }
+        } catch (error) {}
     }
     yield callLoading(doRQ);
 }

@@ -9,7 +9,6 @@ import {
     CModal,
     CButton,
     CFormInput,
-    CRow,
     CCol,
     CModalFooter,
     CFormSelect,
@@ -20,9 +19,10 @@ import { courseActions, courseSelector } from 'src/redux/course/course.slice';
 import { OthersSelector } from 'src/redux/others/slice';
 import TableCustom from 'src/components/table';
 import { useNavigate } from 'react-router-dom';
+import UploadImage from 'src/components/uploadImage';
 const Courses = () => {
     let navigate = useNavigate();
-    const courseForm = { name: '', code: '123', status: 1, type: '' };
+    const courseForm = { name: '', code: '123', status: 1, type: '', image: '' };
     const [inputs, setInputs] = useState({ ...courseForm });
     const filterForm = { name: '', status: 0 };
     const [filter, setFilter] = useState(filterForm);
@@ -63,7 +63,7 @@ const Courses = () => {
     };
     const data = {
         data: courses.map((c, i) => {
-            return { ...c, type: c.type.name };
+            return { ...c, typeName: c.typeObj.name };
         }),
         actions: [
             {
@@ -78,7 +78,6 @@ const Courses = () => {
                 value: 'Nội dung khóa học',
                 openMoDalAdd: function (data) {
                     navigate('/courses/' + data.code, { replace: true });
-                    console.log(data);
                 },
             },
         ],
@@ -92,7 +91,7 @@ const Courses = () => {
                 value: 'Tên khóa học',
             },
             {
-                key: 'type',
+                key: 'typeName',
                 value: 'Loại khóa học',
             },
             {
@@ -123,6 +122,11 @@ const Courses = () => {
     const closeModal = () => {
         setValidated(false);
         setVisible(false);
+    };
+    const setUrl = (e) => {
+        setInputs((prev) => {
+            return { ...prev, image: e };
+        });
     };
     return (
         <>
@@ -164,7 +168,10 @@ const Courses = () => {
                             </CFormSelect>
                             <CFormFeedback invalid>Vui lòng chọn loại khóa học.</CFormFeedback>
                         </CCol>
-
+                        <CCol lg="6">
+                            <CFormLabel htmlFor="validationServerUsername">Ảnh nền</CFormLabel>
+                            <UploadImage type="thumbnail" setUrl={setUrl} url={inputs.image} />
+                        </CCol>
                         <CModalFooter>
                             <CButton color="secondary" onClick={() => setVisible(false)}>
                                 Đóng

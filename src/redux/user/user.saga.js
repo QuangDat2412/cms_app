@@ -4,30 +4,26 @@ import { userActions } from './user.slice';
 import { callLoading } from '../others/saga';
 function* getUser({ payload }) {
     function* doRQ() {
-        const res = yield call(getAll, payload);
-        const { status, data } = res;
-        if (status === 200) {
+        try {
+            const res = yield call(getAll, payload);
+            const { data } = res;
             yield put(userActions.getUserSuccess(data));
-        } else {
-            yield console(status, data);
-        }
+        } catch (error) {}
     }
     yield callLoading(doRQ);
 }
 function* addUser({ payload }) {
     const { inputs, type } = payload;
     function* doRQ() {
-        const res = yield call(saveUser, inputs);
-        const { status, data } = res;
-        if (status === 200) {
+        try {
+            const res = yield call(saveUser, inputs);
+            const { data } = res;
             if (type === 'add') {
                 yield put(userActions.saveUserSuccess(data));
             } else {
                 yield put(userActions.updateUserSuccess(data));
             }
-        } else {
-            yield console(status, data);
-        }
+        } catch (error) {}
     }
     yield callLoading(doRQ);
 }

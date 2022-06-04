@@ -10,3 +10,6 @@
         background-color: #000;
     }
 }
+.accordion-item + .accordion-item {
+    margin-top: 10px;
+}
