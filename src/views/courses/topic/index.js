@@ -50,8 +50,14 @@ const Topics = () => {
             setInputs({ ...topicForm });
         }
         setActionType(type);
-        console.log(topic);
         setVisible(true);
+    };
+    const deleteT = (obj) => {
+        Promise.resolve(dispatch(courseActions.deleteTopic(obj)))
+            .then((data) => {
+                dispatch(courseActions.getTopic(filter));
+            })
+            .catch(() => {});
     };
     const data = {
         data: topics.map((c, i) => {
@@ -65,11 +71,18 @@ const Topics = () => {
                     return openMoDalAdd(user, type);
                 },
             },
+            {
+                key: 'delete',
+                value: 'Xoá',
+                openMoDalAdd: function (obj, type) {
+                    return deleteT(obj, type);
+                },
+            },
         ],
         header: [
             {
                 key: 'index',
-                value: 'Số thứ tự',
+                value: 'STT',
             },
             {
                 key: 'name',
@@ -121,8 +134,8 @@ const Topics = () => {
                     <CForm className="row g-3 needs-validation" noValidate validated={validated} onSubmit={saveCourse}>
                         <CCol lg="6">
                             <CFormLabel htmlFor="validationServerUsername">Tên chủ đề</CFormLabel>
-                            <CFormInput type="text" label="Tên khóa học" required name="name" onChange={handleChange} value={inputs.name} />
-                            <CFormFeedback invalid>Vui lòng nhập tên khóa học.</CFormFeedback>
+                            <CFormInput type="text" label="Tên chủ đề" required name="name" onChange={handleChange} value={inputs.name} />
+                            <CFormFeedback invalid>Vui lòng nhập tên chủ đề.</CFormFeedback>
                         </CCol>
                         <CCol lg="6">
                             <CFormLabel htmlFor="validationServerUsername">Khóa học</CFormLabel>
@@ -152,10 +165,10 @@ const Topics = () => {
                             />
                         </CCol>
                         <CModalFooter>
-                            <CButton color="secondary" onClick={() => setVisible(false)}>
+                            <CButton color="secondary" onClick={() => setVisible(false)} className="btn-modal">
                                 Đóng
                             </CButton>
-                            <CButton color="success" type="submit">
+                            <CButton color="warning" type="submit" className="btn-modal">
                                 Lưu lại
                             </CButton>
                         </CModalFooter>

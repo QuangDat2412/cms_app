@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CButton, CCard, CCardBody, CCol, CContainer, CForm, CFormInput, CInputGroup, CInputGroupText, CRow } from '@coreui/react';
 import CIcon from '@coreui/icons-react';
 import GoogleLogin from 'react-google-login';
@@ -6,15 +6,24 @@ import { useDispatch } from 'react-redux';
 import { authActions } from 'src/redux/auth/auth.slice';
 import { OthersAction } from 'src/redux/others/slice';
 import { cilUser, cilLockLocked } from '@coreui/icons';
-
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { authSelector } from 'src/redux/auth/auth.slice';
 const Login = () => {
+    const navigate = useNavigate();
+    const currentUser = useSelector(authSelector.currentUser);
+
     const dispatch = useDispatch();
     const responseSuccessGoogle = (res) => {
         Promise.resolve(dispatch(authActions.googleLogin({ tokenId: res.tokenId }))).then(() => {
             dispatch(OthersAction.getOptions());
         });
     };
-
+    useEffect(() => {
+        if (currentUser?.email) {
+            navigate('/', { replace: true });
+        }
+    }, [currentUser, navigate]);
     const [validated, setValidated] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('false');

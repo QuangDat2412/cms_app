@@ -28,7 +28,6 @@ const UploadImage = ({ setUrl, type, url }) => {
         inputTag.click();
     };
     const className = 'box-img ' + (type === 'thumbnail' ? 'thumbnail' : 'avatar');
-    console.log(url);
     return (
         <>
             <div className={className}>

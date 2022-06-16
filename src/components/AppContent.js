@@ -1,28 +1,31 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
-import { CSpinner, CCard, CCardBody } from '@coreui/react';
-
-// routes config
+import { CCard, CCardBody } from '@coreui/react';
 import routes from '../routes';
+import { useSelector } from 'react-redux';
+import { authSelector } from 'src/redux/auth/auth.slice';
 
 const AppContent = () => {
+    const currentUser = useSelector(authSelector.currentUser);
     return (
-        <div>
-            <CCard>
-                <CCardBody>
-                    <Routes>
-                        {routes.map((route, idx) => {
-                            return (
-                                route.element && (
-                                    <Route key={idx} path={route.path} exact={route.exact} name={route.name} element={<route.element />} />
-                                )
-                            );
-                        })}
-                        <Route path="/" element={<Navigate to="courses" replace />} />
-                    </Routes>
-                </CCardBody>
-            </CCard>
-        </div>
+        <>
+            <Routes>
+                {routes.map((route, idx) => {
+                    return (
+                        route.element && (
+                            <Route
+                                key={idx}
+                                path={route.path}
+                                exact={route.exact}
+                                name={route.name}
+                                element={currentUser?.isAdmin || !route?.isAdmin ? <route.element /> : <Navigate to="/404" replace />}
+                            />
+                        )
+                    );
+                })}
+                <Route path="/" element={<Navigate to="courses" replace />} />
+            </Routes>
+        </>
     );
 };
 

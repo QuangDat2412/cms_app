@@ -15,6 +15,8 @@ import {
     CModalFooter,
     CFormSelect,
     CFormFeedback,
+    CCard,
+    CCardBody,
 } from '@coreui/react';
 import TableCustom from 'src/components/table';
 const Students = () => {
@@ -110,8 +112,13 @@ const Students = () => {
     };
     return (
         <>
-            <Filter openMoDalAdd={openMoDalAdd} handleChangeFilter={handleChangeFilter} />
-            <TableCustom datas={data} openMoDalAdd={openMoDalAdd} />
+            <CCard>
+                <CCardBody>
+                    <Filter openMoDalAdd={openMoDalAdd} handleChangeFilter={handleChangeFilter} />
+                    <TableCustom datas={data} openMoDalAdd={openMoDalAdd} />
+                </CCardBody>
+            </CCard>
+
             <CModal visible={visible} onClose={closeModal} size="lg">
                 <CModalHeader onClose={closeModal}>
                     <CModalTitle>{actionType === 'add' ? 'Thêm mới người dùng' : 'Chỉnh sửa thông tin:'}</CModalTitle>
@@ -156,10 +163,10 @@ const Students = () => {
                         </CCol>
 
                         <CModalFooter>
-                            <CButton color="secondary" onClick={closeModal}>
+                            <CButton color="secondary" onClick={closeModal} className="btn-modal">
                                 Đóng
                             </CButton>
-                            <CButton color="success" type="submit">
+                            <CButton color="warning" type="submit" className="btn-modal">
                                 Lưu lại
                             </CButton>
                         </CModalFooter>

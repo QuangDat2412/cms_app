@@ -19,6 +19,11 @@ const _nav = [
                 name: 'Chủ đề',
                 to: '/topics',
             },
+            {
+                component: CNavItem,
+                name: 'Bài học',
+                to: '/lessons',
+            },
         ],
     },
     {

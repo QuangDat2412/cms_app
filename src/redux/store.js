@@ -17,7 +17,6 @@ const composeEnhancer =
           })
         : compose;
 function* rootSaga() {
-    console.log('rootSaga');
     try {
         yield all([authSaga(), courseSaga(), userSaga(), otherSaga()]);
     } catch (err) {

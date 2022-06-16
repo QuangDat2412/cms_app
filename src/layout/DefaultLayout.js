@@ -1,6 +1,7 @@
 import React from 'react';
 import { AppContent, AppSidebar, AppFooter, AppHeader } from '../components/index';
 import Loading from '../components/loading';
+
 const DefaultLayout = () => {
     return (
         <div>

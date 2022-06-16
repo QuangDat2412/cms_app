@@ -4,6 +4,7 @@ const initialState = {
     courses: [],
     course: {},
     topics: [],
+    lessons: [],
 };
 
 const courseSlice = createSlice({
@@ -17,7 +18,6 @@ const courseSlice = createSlice({
             state.courses = payload.map((p) => {
                 return { ...p, typeObj: p.type, type: p.type._id };
             });
-            console.log(state.courses);
         },
         getCourseByCodeSuccess(state, { payload }) {
             state.course = payload;
@@ -25,10 +25,15 @@ const courseSlice = createSlice({
         getCourse() {},
         getCourseByCode() {},
         getTopic() {},
+        getLesson() {},
+        deleteLesson() {},
+        deleteTopic() {},
+        deleteCourse() {},
         getTopicSuccess(state, { payload }) {
-            state.topics = payload.map((p) => {
-                return { ...p, course: p.courseId, courseId: p.courseId._id };
-            });
+            state.topics = payload;
+        },
+        getLessonSuccess(state, { payload }) {
+            state.lessons = payload;
         },
     },
 });
@@ -42,6 +47,7 @@ export const courseSelector = {
     courses: (state) => state['courses'].courses,
     course: (state) => state['courses'].course,
     topics: (state) => state['courses'].topics,
+    lessons: (state) => state['courses'].lessons,
 };
 // reducer
 const courseReducer = courseSlice.reducer;

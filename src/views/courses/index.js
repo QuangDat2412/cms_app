@@ -13,6 +13,8 @@ import {
     CModalFooter,
     CFormSelect,
     CFormFeedback,
+    CCard,
+    CCardBody,
 } from '@coreui/react';
 import { useDispatch, useSelector } from 'react-redux';
 import { courseActions, courseSelector } from 'src/redux/course/course.slice';
@@ -20,9 +22,11 @@ import { OthersSelector } from 'src/redux/others/slice';
 import TableCustom from 'src/components/table';
 import { useNavigate } from 'react-router-dom';
 import UploadImage from 'src/components/uploadImage';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 const Courses = () => {
     let navigate = useNavigate();
-    const courseForm = { name: '', code: '123', status: 1, type: '', image: '' };
+    const courseForm = { name: '', code: '123', status: 1, type: '', image: '', description: '' };
     const [inputs, setInputs] = useState({ ...courseForm });
     const filterForm = { name: '', status: 0 };
     const [filter, setFilter] = useState(filterForm);
@@ -80,6 +84,13 @@ const Courses = () => {
                     navigate('/courses/' + data.code, { replace: true });
                 },
             },
+            {
+                key: 'delete',
+                value: 'Xoá',
+                openMoDalAdd: function (obj, type) {
+                    return deleteT(obj, type);
+                },
+            },
         ],
         header: [
             {
@@ -100,6 +111,13 @@ const Courses = () => {
                 type: 'status',
             },
         ],
+    };
+    const deleteT = (obj) => {
+        Promise.resolve(dispatch(courseActions.deleteCourse(obj)))
+            .then((data) => {
+                dispatch(courseActions.getCourse(filter));
+            })
+            .catch(() => {});
     };
     const handleChangeFilter = useCallback((e) => {
         setFilter((prev) => {
@@ -130,8 +148,12 @@ const Courses = () => {
     };
     return (
         <>
-            <Filter openMoDalAdd={openMoDalAdd} handleChangeFilter={handleChangeFilter} />
-            <TableCustom datas={data} />
+            <CCard>
+                <CCardBody>
+                    <Filter openMoDalAdd={openMoDalAdd} handleChangeFilter={handleChangeFilter} />
+                    <TableCustom datas={data} />
+                </CCardBody>
+            </CCard>
             <CModal visible={visible} onClose={() => setVisible(false)} size="lg">
                 <CModalHeader onClose={() => setVisible(false)}>
                     <CModalTitle>{actionType === 'add' ? 'Thêm mới khóa học' : 'Chỉnh sửa khóa học'}</CModalTitle>
@@ -168,15 +190,28 @@ const Courses = () => {
                             </CFormSelect>
                             <CFormFeedback invalid>Vui lòng chọn loại khóa học.</CFormFeedback>
                         </CCol>
+                        <CCol lg="12">
+                            <CFormLabel htmlFor="validationServerUsername">Mô tả</CFormLabel>
+                            <CKEditor
+                                editor={ClassicEditor}
+                                data={inputs.description}
+                                onChange={(event, editor) => {
+                                    const data = editor.getData();
+                                    setInputs((prev) => {
+                                        return { ...prev, description: data };
+                                    });
+                                }}
+                            />
+                        </CCol>
                         <CCol lg="6">
                             <CFormLabel htmlFor="validationServerUsername">Ảnh nền</CFormLabel>
                             <UploadImage type="thumbnail" setUrl={setUrl} url={inputs.image} />
                         </CCol>
                         <CModalFooter>
-                            <CButton color="secondary" onClick={() => setVisible(false)}>
+                            <CButton color="secondary" onClick={() => setVisible(false)} className="btn-modal">
                                 Đóng
                             </CButton>
-                            <CButton color="success" type="submit">
+                            <CButton color="warning" type="submit" className="btn-modal">
                                 Lưu lại
                             </CButton>
                         </CModalFooter>

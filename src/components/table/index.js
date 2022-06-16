@@ -1,7 +1,7 @@
 import React from 'react';
 import { CTable, CTableHead, CTableRow, CTableBody, CTableHeaderCell, CTableDataCell } from '@coreui/react';
 import PropTypes from 'prop-types';
-
+import './index.scss';
 const TableCustom = ({ datas }) => {
     const { header, data, actions } = datas;
     return (
@@ -42,12 +42,16 @@ const TableCustom = ({ datas }) => {
                                             </CTableDataCell>
                                         );
                                     } else if (h.type == 'html') {
-                                        return <CTableDataCell key={j} dangerouslySetInnerHTML={{ __html: d[h.key] }}></CTableDataCell>;
+                                        return (
+                                            <CTableDataCell key={j}>
+                                                <span dangerouslySetInnerHTML={{ __html: d[h.key] }} className="wrapword"></span>
+                                            </CTableDataCell>
+                                        );
                                     } else {
                                         return <CTableDataCell key={j}>{d[h.key]}</CTableDataCell>;
                                     }
                                 })}
-                                <CTableDataCell className="d-flex justify-content-between" style={{ width: '70%' }}>
+                                <CTableDataCell className="d-flex justify-content-between">
                                     {actions.map((action, i) => {
                                         return (
                                             <a

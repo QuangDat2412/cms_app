@@ -1,5 +1,6 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { courseActions, courseSelector } from 'src/redux/course/course.slice';
 import {
@@ -13,22 +14,14 @@ import {
     CTableBody,
     CTableRow,
     CTableDataCell,
-    CFormLabel,
-    CForm,
-    CModalTitle,
-    CModalHeader,
-    CModalBody,
-    CModal,
-    CButton,
-    CFormInput,
-    CModalFooter,
-    CFormFeedback,
+    CCard,
+    CCardBody,
 } from '@coreui/react';
-
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import CIcon from '@coreui/icons-react';
+import { cilClock, cilBook, cilMovie } from '@coreui/icons';
 import './index.scss';
 const CourseDetail = () => {
+    let navigate = useNavigate();
     const currentLocation = useLocation().pathname;
     const code = currentLocation.split('/')[2];
     const dispatch = useDispatch();
@@ -38,173 +31,157 @@ const CourseDetail = () => {
             dispatch(courseActions.getCourseByCode({ code: code }));
         }
     }, [dispatch, code]);
-    const lessonForm = { name: '', topicId: '', description: '', image: '', code: [], url: '' };
-    const [inputs, setInputs] = useState({ ...lessonForm });
-    const [visible, setVisible] = useState(false);
-    const [lesson, setLesson] = useState(false);
-    const [visible1, setVisible1] = useState(false);
-    const [validated, setValidated] = useState(false);
-    const [actionType, setActionType] = useState('');
-    const handleChange = useCallback((e) => {
-        setInputs((prev) => {
-            return { ...prev, [e.target.name]: e.target.value };
-        });
-    }, []);
-    const openMoDalView = (lesson) => {
-        setLesson(lesson);
-        setVisible1(true);
-    };
-    const openMoDalAdd = (lesson, type, id) => {
-        if (type === 'update') {
-            const _lesson = { ...lesson };
-            setInputs(_lesson);
-        } else if (type === 'add') {
-            setInputs({ ...lessonForm, code: makeCode(6), topicId: id });
-        }
-        setActionType(type);
-        setVisible(true);
-    };
-    const saveCourse = (event) => {
-        event.preventDefault();
-        const form = event.currentTarget;
-        if (form.checkValidity()) {
-            Promise.resolve(dispatch(courseActions.saveLesson(inputs)))
-                .then((data) => {
-                    closeModal();
-                    dispatch(courseActions.getCourseByCode({ code: code }));
-                })
-                .catch(() => {});
-        }
-        setValidated(true);
-    };
-    const closeModal = () => {
-        setValidated(false);
-        setVisible(false);
-    };
-    const makeCode = (n) => {
-        var text = '';
-        var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let listTopics = course.listTopics || [];
+    let total = 0;
+    listTopics = listTopics.map((t, i) => {
+        let ll = t.listLessons.map((l, j) => ({ ...l, sort: j + 1 + total }));
+        total = total + t.listLessons.length;
+        return { ...t, listLessons: ll };
+    });
 
-        for (var i = 0; i < n; i++) text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-        return text;
+    const lessonCount = listTopics.reduce((p, n) => {
+        return p + n.listLessons.length;
+    }, 0);
+    const times = listTopics.reduce((p, n) => {
+        let ll = n.listLessons;
+        let t = ll.reduce((p, n) => {
+            return p + n?.time || 0;
+        }, 0);
+        return p + t;
+    }, 0);
+    function secondsToHms(d, type) {
+        d = Number(d);
+        var h = Math.floor(d / 3600);
+        var m = Math.floor((d % 3600) / 60);
+        var s = Math.floor((d % 3600) % 60);
+        var hDisplay = h > 0 ? (h < 10 ? `0${h}` : h) + ' giờ' : '';
+        var mDisplay = m > 0 ? (m < 10 ? `0${m}` : m) + ' phút' : '';
+        var sDisplay = s > 0 ? (s < 10 ? `0${s}` : s) + ' giây' : '';
+        if (type === 'hm') {
+            return hDisplay + ' ' + mDisplay;
+        } else if (type === 'ms') {
+            return (m < 10 ? `0${m}` : m) + ':' + (s < 10 ? `0${s}` : s);
+        } else {
+            return mDisplay + ' ' + sDisplay + '' + sDisplay;
+        }
+    }
+    const goLearning = () => {
+        navigate('/learning/' + code, { replace: true });
     };
-    const listTopics = course.listTopics || [];
     return (
         <>
-            <CRow xs={{ gutterX: 2, gutterY: 2 }}>
-                <CCol lg={6}>
-                    <h4>{course.name}</h4>
-                </CCol>
-                <CCol lg={12}>
-                    <CAccordion activeItemKey={0}>
-                        {listTopics.map((t, i) => {
-                            return (
-                                <CAccordionItem itemKey={i} key={i}>
-                                    <CAccordionHeader>{t.name}</CAccordionHeader>
-                                    <CAccordionBody>
-                                        <CTable className="mb-0">
-                                            <CTableBody>
-                                                {t.listLessons.map((l, i) => {
-                                                    return (
-                                                        <CTableRow key={i}>
-                                                            <CTableDataCell className="btn-lesson" style={{ width: '83%' }}>
-                                                                {l.name}
-                                                            </CTableDataCell>
-                                                            <CTableDataCell className="btn-lesson">
-                                                                <CButton
-                                                                    color="warning"
-                                                                    onClick={() => {
-                                                                        openMoDalView(l);
-                                                                    }}
-                                                                >
-                                                                    Xem bai hoc
-                                                                </CButton>
-                                                                <CButton
-                                                                    onClick={() => {
-                                                                        openMoDalAdd(l, 'update', t._id);
-                                                                    }}
-                                                                    className="ms-2"
-                                                                >
-                                                                    Chinh sua
-                                                                </CButton>
-                                                            </CTableDataCell>
-                                                        </CTableRow>
-                                                    );
-                                                })}
-                                            </CTableBody>
-                                        </CTable>
-                                        {/* <CButton
-                                            color="warning"
-                                            onClick={() => {
-                                                openMoDalAdd({}, 'add', t._id);
-                                            }}
-                                            className="mt-3"
-                                        >
-                                            Thêm bài học
-                                        </CButton> */}
-                                    </CAccordionBody>
-                                </CAccordionItem>
-                            );
-                        })}
-                    </CAccordion>
-                </CCol>
-            </CRow>
-            <CModal visible={visible} onClose={() => setVisible(false)} size="lg">
-                <CModalHeader onClose={() => setVisible(false)}>
-                    <CModalTitle>{actionType === 'add' ? 'Thêm mới bài học' : 'Chỉnh sửa bài học'}</CModalTitle>
-                </CModalHeader>
-                <CModalBody>
-                    <CForm className="row g-3 needs-validation" noValidate validated={validated} onSubmit={saveCourse}>
-                        <CCol lg="6">
-                            <CFormLabel htmlFor="validationServerUsername">Tên bài học</CFormLabel>
-                            <CFormInput type="text" label="Tên khóa học" required name="name" onChange={handleChange} value={inputs.name} />
-                            <CFormFeedback invalid>Vui lòng nhập tên bài học.</CFormFeedback>
+            <CCard>
+                <CCardBody>
+                    <CRow className="course-detail">
+                        <CCol lg="8">
+                            <CRow xs={{ gutterX: 2, gutterY: 2 }}>
+                                <CCol lg={12} className="mb-2">
+                                    <h2>
+                                        <strong>{course.name}</strong>
+                                    </h2>
+                                    <span dangerouslySetInnerHTML={{ __html: course.description }}></span>
+                                </CCol>
+                                <CCol lg={12} className="mb-1">
+                                    <h4>
+                                        <strong>Nội dung khóa học</strong>
+                                        <ul className="count mt-3">
+                                            <li>
+                                                <strong>{course.listTopics?.length} </strong> chương
+                                            </li>
+                                            <li className="space">•</li>
+                                            <li>
+                                                <strong>{lessonCount} </strong> bài học
+                                            </li>
+                                            <li className="space">•</li>
+                                            <li>
+                                                <span>
+                                                    Thời lượng: <strong>{secondsToHms(times)}</strong>
+                                                </span>
+                                            </li>
+                                        </ul>
+                                    </h4>
+                                </CCol>
+                                <CCol lg={12}>
+                                    <CAccordion activeItemKey={0} alwaysOpen>
+                                        {listTopics.map((t, i) => {
+                                            return (
+                                                <CAccordionItem itemKey={i} key={i}>
+                                                    <CAccordionHeader>
+                                                        <strong style={{ fontSize: '16px', flex: 1 }}>{`${i + 1}. ${t.name}`}</strong>
+                                                        <span style={{ fontSize: '16px', marginRight: '10px' }}>
+                                                            {t.listLessons.length + ' bài học'}
+                                                        </span>
+                                                    </CAccordionHeader>
+                                                    <CAccordionBody>
+                                                        <CTable className="mb-0">
+                                                            <CTableBody>
+                                                                {t.listLessons.map((l, i) => {
+                                                                    return (
+                                                                        <CTableRow key={i}>
+                                                                            <CTableDataCell className="btn-lesson">
+                                                                                {l.sort + '. ' + l.name}
+                                                                            </CTableDataCell>
+                                                                            <CTableDataCell className="d-flex justify-content-end">
+                                                                                {secondsToHms(l.time, 'ms')}
+                                                                            </CTableDataCell>
+                                                                        </CTableRow>
+                                                                    );
+                                                                })}
+                                                            </CTableBody>
+                                                        </CTable>
+                                                    </CAccordionBody>
+                                                </CAccordionItem>
+                                            );
+                                        })}
+                                    </CAccordion>
+                                </CCol>
+                            </CRow>
                         </CCol>
-                        <CCol lg="6">
-                            <CFormLabel htmlFor="validationServerUsername">Code</CFormLabel>
-                            <CFormInput type="text" label="Code" required name="code" disabled={true} value={inputs.code} />
+                        <CCol lg="4">
+                            <CRow>
+                                <CCol lg="12">
+                                    <div style={{ padding: '0 50px' }}>
+                                        <div className="player-doc">
+                                            <div className="player">
+                                                <img width="100%" height="100%" src={course.image} alt="" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </CCol>
+                                <CCol lg="12" className="d-flex justify-content-center mt-3">
+                                    <h2 style={{ color: 'orange' }}>Miễn Phí</h2>
+                                </CCol>
+                                <CCol lg="12" className="d-flex justify-content-center mt-3">
+                                    <div className="px-4 py-2 btn-action" onClick={goLearning}>
+                                        HỌC NGAY
+                                    </div>
+                                </CCol>
+                                <CCol lg="12" className="mt-2">
+                                    <CRow className="align-items-center">
+                                        <CCol lg="3"></CCol>
+                                        <CCol lg="1">
+                                            <CIcon icon={cilBook} />
+                                        </CCol>
+                                        <CCol lg="8">{course.type?.name}</CCol>
+                                        <CCol lg="3"></CCol>
+
+                                        <CCol lg="1">
+                                            <CIcon icon={cilMovie} />
+                                        </CCol>
+                                        <CCol lg="8">{'Tổng số ' + lessonCount + ' bài học'}</CCol>
+                                        <CCol lg="3"></CCol>
+
+                                        <CCol lg="1">
+                                            <CIcon icon={cilClock} />
+                                        </CCol>
+                                        <CCol lg="8">{'Thời lượng ' + secondsToHms(times)}</CCol>
+                                    </CRow>
+                                </CCol>
+                            </CRow>
                         </CCol>
-                        <CCol lg="6">
-                            <CFormLabel htmlFor="validationServerUsername">Link bài học</CFormLabel>
-                            <CFormInput type="text" label="Code" required name="url" onChange={handleChange} value={inputs.url} />
-                        </CCol>
-                        <CCol lg="12">
-                            <CFormLabel htmlFor="validationServerUsername">Mô tả</CFormLabel>
-                            <CKEditor
-                                editor={ClassicEditor}
-                                data={inputs.description}
-                                onChange={(event, editor) => {
-                                    const data = editor.getData();
-                                    setInputs((prev) => {
-                                        return { ...prev, description: data };
-                                    });
-                                }}
-                            />
-                        </CCol>
-                        <CModalFooter>
-                            <CButton color="secondary" onClick={() => setVisible(false)}>
-                                Đóng
-                            </CButton>
-                            <CButton color="success" type="submit">
-                                Lưu lại
-                            </CButton>
-                        </CModalFooter>
-                    </CForm>
-                </CModalBody>
-            </CModal>
-            <CModal visible={visible1} onClose={() => setVisible1(false)} size="lg">
-                <CModalHeader onClose={() => setVisible1(false)}>
-                    <CModalTitle>Bài học: {lesson.name}</CModalTitle>
-                </CModalHeader>
-                <CModalBody>
-                    <div className="player-doc">
-                        <div className="player">
-                            <iframe width="100%" height="100%" src={lesson.url} title={lesson.name}></iframe>
-                        </div>
-                    </div>
-                </CModalBody>
-            </CModal>
+                    </CRow>
+                </CCardBody>
+            </CCard>
         </>
     );
 };
