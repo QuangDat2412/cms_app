@@ -31,6 +31,7 @@ const Courses = () => {
     const filterForm = { name: '', status: 0 };
     const [filter, setFilter] = useState(filterForm);
     const options = useSelector(OthersSelector.options);
+    const isLoading = useSelector(OthersSelector.isLoading);
     const typeCourse = options?.typeCourse || [];
     const dispatch = useDispatch();
     useEffect(() => {

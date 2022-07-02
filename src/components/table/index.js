@@ -16,7 +16,11 @@ const TableCustom = ({ datas }) => {
                                 </CTableHeaderCell>
                             );
                         })}
-                        {actions.length > 0 && <CTableHeaderCell key={-1}>Hành động</CTableHeaderCell>}
+                        {actions.length > 0 && (
+                            <CTableHeaderCell key={-1} style={{ width: '180px' }}>
+                                Hành động
+                            </CTableHeaderCell>
+                        )}
                     </CTableRow>
                 </CTableHead>
                 <CTableBody>
@@ -24,7 +28,7 @@ const TableCustom = ({ datas }) => {
                         return (
                             <CTableRow key={i}>
                                 {header.map((h, j) => {
-                                    if (h.type == 'status') {
+                                    if (h.type === 'status') {
                                         return (
                                             <CTableDataCell key={j}>
                                                 <div
@@ -41,7 +45,7 @@ const TableCustom = ({ datas }) => {
                                                 </div>
                                             </CTableDataCell>
                                         );
-                                    } else if (h.type == 'html') {
+                                    } else if (h.type === 'html') {
                                         return (
                                             <CTableDataCell key={j}>
                                                 <span dangerouslySetInnerHTML={{ __html: d[h.key] }} className="wrapword"></span>
@@ -51,7 +55,7 @@ const TableCustom = ({ datas }) => {
                                         return <CTableDataCell key={j}>{d[h.key]}</CTableDataCell>;
                                     }
                                 })}
-                                <CTableDataCell className="d-flex justify-content-between">
+                                <CTableDataCell>
                                     {actions.map((action, i) => {
                                         return (
                                             <a
@@ -59,6 +63,7 @@ const TableCustom = ({ datas }) => {
                                                     event.preventDefault();
                                                     action.openMoDalAdd(d, action.key);
                                                 }}
+                                                className="mx-2"
                                                 href="/"
                                                 key={i}
                                             >

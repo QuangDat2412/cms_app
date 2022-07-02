@@ -11,6 +11,7 @@ const LIST_URL = {
     DELETE_TOPIC: `/topics/`,
     DELETE_COURSE: `/courses/`,
 };
+
 export const addCourse = (model) => userRequest.post(LIST_URL.ADD, model);
 export const addTopic = (model) => userRequest.post(LIST_URL.ADD_TOPIC, model);
 export const addLesson = (model) => userRequest.post(LIST_URL.ADD_LESSON, model);

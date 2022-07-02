@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useRef } from 'react';
 import {
     CCol,
@@ -43,13 +44,7 @@ const Learning = () => {
     const lessonCount = listTopics.reduce((p, n) => {
         return p + n.listLessons.length;
     }, 0);
-    const times = listTopics.reduce((p, n) => {
-        let ll = n.listLessons;
-        let t = ll.reduce((p, n) => {
-            return p + n?.time || 0;
-        }, 0);
-        return p + t;
-    }, 0);
+
     function secondsToHms(d, type) {
         d = Number(d);
         var h = Math.floor(d / 3600);
@@ -67,8 +62,8 @@ const Learning = () => {
         }
     }
     const header = useRef();
+    const video = useRef();
     const headerC = useRef();
-
     const [headerH, setHeaderH] = useState(0);
     useEffect(() => {
         setHeaderH(header.current.clientHeight + headerC.current.clientHeight);
@@ -78,11 +73,11 @@ const Learning = () => {
             <CRow xs={{ gutter: 0 }} className="box">
                 <CCol ref={header} className="nav-bar-lesson">
                     <div>{course?.name}</div>
-                    <p>
-                        <CircularProgressbar value={0.55} maxValue={1} text={`${0.55 * 100}%`} />
+                    <span>
+                        <CircularProgressbar value={0.55} maxValue={1} text={`${55}%`} />
                         <strong>{'0/' + lessonCount}</strong>
                         {' bài học'}
-                    </p>
+                    </span>
                 </CCol>
                 <CCol
                     lg="9"
@@ -98,7 +93,15 @@ const Learning = () => {
                         <div>
                             <div className="player-doc">
                                 <div className="player">
-                                    <iframe width="100%" height="100%" src={lesson?.url} title={lesson?.name}></iframe>
+                                    <iframe
+                                        width="100%"
+                                        height="100%"
+                                        ref={video}
+                                        src={lesson?.url}
+                                        title={lesson?.name}
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowFullScreen
+                                    ></iframe>
                                 </div>
                             </div>
                         </div>
@@ -136,7 +139,8 @@ const Learning = () => {
                                                         <CTableRow key={li}>
                                                             <CTableDataCell
                                                                 className={
-                                                                    'btn-lesson ' + (lesson.topicIdx == ti && lesson.lessonIdx == li ? 'active' : '')
+                                                                    'btn-lesson ' +
+                                                                    (lesson.topicIdx === ti && lesson.lessonIdx === li ? 'active' : '')
                                                                 }
                                                                 onClick={() => {
                                                                     setLesson({ ...l, topicIdx: ti, lessonIdx: li });

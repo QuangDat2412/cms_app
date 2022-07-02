@@ -9,6 +9,8 @@ import {
     CModal,
     CButton,
     CFormInput,
+    CCardBody,
+    CCard,
     CCol,
     CModalFooter,
     CFormSelect,
@@ -16,6 +18,7 @@ import {
 } from '@coreui/react';
 import { useDispatch, useSelector } from 'react-redux';
 import { courseActions, courseSelector } from 'src/redux/course/course.slice';
+import { topicActions, topicSelector } from 'src/redux/topic/topic.slice';
 import TableCustom from 'src/components/table';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
@@ -29,10 +32,10 @@ const Topics = () => {
         dispatch(courseActions.getCourse({ name: '', status: 1 }));
     }, [dispatch]);
     useEffect(() => {
-        dispatch(courseActions.getTopic(filter));
+        dispatch(topicActions.getTopic(filter));
     }, [filter, dispatch]);
     const courses = useSelector(courseSelector.courses);
-    const topics = useSelector(courseSelector.topics);
+    const topics = useSelector(topicSelector.topics);
     const [visible, setVisible] = useState(false);
     const [validated, setValidated] = useState(false);
     const [actionType, setActionType] = useState('');
@@ -53,9 +56,9 @@ const Topics = () => {
         setVisible(true);
     };
     const deleteT = (obj) => {
-        Promise.resolve(dispatch(courseActions.deleteTopic(obj)))
+        Promise.resolve(dispatch(topicActions.deleteTopic(obj)))
             .then((data) => {
-                dispatch(courseActions.getTopic(filter));
+                dispatch(topicActions.getTopic(filter));
             })
             .catch(() => {});
     };
@@ -108,10 +111,10 @@ const Topics = () => {
         event.preventDefault();
         const form = event.currentTarget;
         if (form.checkValidity()) {
-            Promise.resolve(dispatch(courseActions.saveTopic(inputs)))
+            Promise.resolve(dispatch(topicActions.saveTopic(inputs)))
                 .then((data) => {
                     closeModal();
-                    dispatch(courseActions.getTopic(filter));
+                    dispatch(topicActions.getTopic(filter));
                 })
                 .catch(() => {});
         }
@@ -123,8 +126,12 @@ const Topics = () => {
     };
     return (
         <>
-            <Filter openMoDalAdd={openMoDalAdd} handleChangeFilter={handleChangeFilter} courses={courses} />
-            <TableCustom datas={data} />
+            <CCard>
+                <CCardBody>
+                    <Filter openMoDalAdd={openMoDalAdd} handleChangeFilter={handleChangeFilter} courses={courses} />
+                    <TableCustom datas={data} />
+                </CCardBody>
+            </CCard>
 
             <CModal visible={visible} onClose={() => setVisible(false)} size="lg">
                 <CModalHeader onClose={() => setVisible(false)}>

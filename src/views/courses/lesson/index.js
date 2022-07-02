@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 import React, { useState, useCallback, useEffect } from 'react';
 import Filter from './Filter';
 import {
@@ -18,6 +19,7 @@ import {
 } from '@coreui/react';
 import { useDispatch, useSelector } from 'react-redux';
 import { courseActions, courseSelector } from 'src/redux/course/course.slice';
+import { lessonActions, lessonSelector } from 'src/redux/lesson/lesson.slice';
 import TableCustom from 'src/components/table';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
@@ -32,13 +34,13 @@ const Lessons = () => {
     }, [dispatch]);
     useEffect(() => {
         if (filter.courseId != '0') {
-            dispatch(courseActions.getLesson(filter));
+            dispatch(lessonActions.getLesson(filter));
         }
     }, [filter, dispatch]);
     const [_topics, set_Topics] = useState([]);
     const [__topics, set__Topics] = useState([]);
     const courses = useSelector(courseSelector.courses);
-    const lessons = useSelector(courseSelector.lessons);
+    const lessons = useSelector(lessonSelector.lessons);
     useEffect(() => {
         if (courses[0]?._id) {
             setFilter((prev) => {
@@ -55,9 +57,9 @@ const Lessons = () => {
             setInputs((prev) => {
                 return { ...prev, [e.target.name]: e.target.value };
             });
-            if (e.target.name == 'courseId') {
+            if (e.target.name === 'courseId') {
                 const _c = courses.find((c) => {
-                    return c._id == e.target.value;
+                    return c._id === e.target.value;
                 });
                 set__Topics(_c?.listTopics || []);
             }
@@ -74,7 +76,7 @@ const Lessons = () => {
         if (type === 'update') {
             const _lesson = { ...lesson };
             const _c = courses.find((c) => {
-                return c._id == _lesson.courseId;
+                return c._id === _lesson.courseId;
             });
             set__Topics(_c.listTopics);
             setInputs(_lesson);
@@ -86,9 +88,9 @@ const Lessons = () => {
         setVisible(true);
     };
     const deleteL = (obj) => {
-        Promise.resolve(dispatch(courseActions.deleteLesson(obj)))
+        Promise.resolve(dispatch(lessonActions.deleteLesson(obj)))
             .then((data) => {
-                dispatch(courseActions.getLesson(filter));
+                dispatch(lessonActions.getLesson(filter));
             })
             .catch(() => {});
     };
@@ -140,28 +142,31 @@ const Lessons = () => {
             },
         ],
     };
-    const handleChangeFilter = useCallback((e) => {
-        if (e.target.name == 'courseId') {
-            setFilter((prev) => {
-                return { ...prev, courseId: e.target.value, topicId: '0' };
-            });
-            const _c = courses.find((c) => {
-                return c._id == e.target.value;
-            });
-            set_Topics(_c?.listTopics || []);
-        } else {
-            setFilter((prev) => {
-                return { ...prev, [e.target.name]: e.target.value };
-            });
-        }
-    }, []);
+    const handleChangeFilter = useCallback(
+        (e) => {
+            if (e.target.name === 'courseId') {
+                setFilter((prev) => {
+                    return { ...prev, courseId: e.target.value, topicId: '0' };
+                });
+                const _c = courses.find((c) => {
+                    return c._id === e.target.value;
+                });
+                set_Topics(_c?.listTopics || []);
+            } else {
+                setFilter((prev) => {
+                    return { ...prev, [e.target.name]: e.target.value };
+                });
+            }
+        },
+        [courses],
+    );
     const saveCourse = (event) => {
         event.preventDefault();
         const form = event.currentTarget;
         if (form.checkValidity()) {
-            Promise.resolve(dispatch(courseActions.saveLesson(inputs)))
+            Promise.resolve(dispatch(lessonActions.saveLesson(inputs)))
                 .then((data) => {
-                    dispatch(courseActions.getLesson(filter));
+                    dispatch(lessonActions.getLesson(filter));
                     closeModal();
                 })
                 .catch(() => {});

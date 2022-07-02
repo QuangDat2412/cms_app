@@ -1,6 +1,5 @@
 import React from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
-import { CCard, CCardBody } from '@coreui/react';
 import routes from '../routes';
 import { useSelector } from 'react-redux';
 import { authSelector } from 'src/redux/auth/auth.slice';
@@ -23,7 +22,6 @@ const AppContent = () => {
                         )
                     );
                 })}
-                <Route path="/" element={<Navigate to="courses" replace />} />
             </Routes>
         </>
     );
