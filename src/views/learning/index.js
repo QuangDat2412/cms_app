@@ -19,6 +19,8 @@ import clock from '../../assets/icon-lesson/Icon.svg';
 import './index.scss';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import ReactHlsPlayer from 'react-hls-player';
+import { DOMAIN } from '../../constants/api';
 const Learning = () => {
     const currentLocation = useLocation().pathname;
     const [lesson, setLesson] = useState({});
@@ -90,19 +92,17 @@ const Learning = () => {
                     }}
                 >
                     <div className="box-player-doc" style={{ backgroundColor: ' #000' }}>
-                        <div>
-                            <div className="player-doc">
-                                <div className="player">
-                                    <iframe
-                                        width="100%"
-                                        height="100%"
-                                        ref={video}
-                                        src={lesson?.url}
-                                        title={lesson?.name}
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                        allowFullScreen
-                                    ></iframe>
-                                </div>
+                        <div className="player-doc" style={{ width: '100%' }}>
+                            <div className="player">
+                                {/* <YouTube
+                                        videoId={lesson?.url}
+                                        id={lesson?.name}
+                                        className="box-iframe"
+                                        onEnd={(a) => {
+                                            done();
+                                        }}
+                                    /> */}
+                                <ReactHlsPlayer src={DOMAIN + lesson.url} id={lesson?.name} width="100%" height="100%" controls />
                             </div>
                         </div>
                     </div>

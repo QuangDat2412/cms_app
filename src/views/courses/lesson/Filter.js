@@ -12,7 +12,7 @@ const Filter = (props) => {
     return (
         <>
             <CRow xs={{ gutterX: 2, gutterY: 2 }}>
-                <CCol lg={3}>
+                <CCol lg={4}>
                     <CRow>
                         <CCol xs={7}>
                             <h4>Danh sách bài học</h4>
@@ -24,42 +24,46 @@ const Filter = (props) => {
                         </CCol>
                     </CRow>
                 </CCol>
-                <CCol lg={3}>
-                    <CInputGroup className="mb-3">
-                        <CInputGroupText id="basic-addon1">Khóa học</CInputGroupText>
-                        <CFormSelect onChange={handleChangeFilter} name="courseId">
-                            {courses.map((t) => {
-                                return (
-                                    <option value={t._id} key={t._id}>
-                                        {t.name}
+                <CCol lg={8}>
+                    <CRow>
+                        <CCol lg={4}>
+                            <CInputGroup className="mb-3">
+                                <CInputGroupText id="basic-addon1">Khóa học</CInputGroupText>
+                                <CFormSelect onChange={handleChangeFilter} name="courseId">
+                                    {courses.map((t) => {
+                                        return (
+                                            <option value={t._id} key={t._id}>
+                                                {t.name}
+                                            </option>
+                                        );
+                                    })}
+                                </CFormSelect>
+                            </CInputGroup>
+                        </CCol>
+                        <CCol lg={4}>
+                            <CInputGroup className="mb-3">
+                                <CInputGroupText id="basic-addon1">Chủ đề</CInputGroupText>
+                                <CFormSelect onChange={handleChangeFilter} name="topicId">
+                                    <option value={0} key={-1}>
+                                        Tất cả
                                     </option>
-                                );
-                            })}
-                        </CFormSelect>
-                    </CInputGroup>
-                </CCol>
-                <CCol lg={3}>
-                    <CInputGroup className="mb-3">
-                        <CInputGroupText id="basic-addon1">Chủ đề</CInputGroupText>
-                        <CFormSelect onChange={handleChangeFilter} name="topicId">
-                            <option value={0} key={-1}>
-                                Tất cả
-                            </option>
-                            {topics.map((t) => {
-                                return (
-                                    <option value={t._id} key={t._id}>
-                                        {t.name}
-                                    </option>
-                                );
-                            })}
-                        </CFormSelect>
-                    </CInputGroup>
-                </CCol>
-                <CCol lg={3}>
-                    <CInputGroup className="mb-3">
-                        <CInputGroupText id="basic-addon1">Tìm kiếm</CInputGroupText>
-                        <CFormInput placeholder="Tìm kiếm khóa học" onChange={handleChangeFilter} name="name" />
-                    </CInputGroup>
+                                    {topics.map((t) => {
+                                        return (
+                                            <option value={t._id} key={t._id}>
+                                                {t.name}
+                                            </option>
+                                        );
+                                    })}
+                                </CFormSelect>
+                            </CInputGroup>
+                        </CCol>
+                        <CCol lg={4}>
+                            <CInputGroup className="mb-3">
+                                <CInputGroupText id="basic-addon1">Tìm kiếm</CInputGroupText>
+                                <CFormInput placeholder="Tìm kiếm khóa học" onChange={handleChangeFilter} name="name" />
+                            </CInputGroup>
+                        </CCol>
+                    </CRow>
                 </CCol>
             </CRow>
         </>

@@ -66,6 +66,7 @@ const Topics = () => {
         data: topics.map((c, i) => {
             return { ...c, course: c.course?.name, index: i + 1 };
         }),
+        widthAc: 200,
         actions: [
             {
                 key: 'update',

@@ -70,6 +70,7 @@ const Courses = () => {
         data: courses.map((c, i) => {
             return { ...c, typeName: c.typeObj.name };
         }),
+        widthAc: 320,
         actions: [
             {
                 key: 'update',

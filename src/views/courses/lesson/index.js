@@ -23,6 +23,7 @@ import { lessonActions, lessonSelector } from 'src/redux/lesson/lesson.slice';
 import TableCustom from 'src/components/table';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import UploadVideo from '../../../components/uploadVIdeo';
 const Lessons = () => {
     const lessonForm = { name: '', topicId: '', description: '', image: '', code: [], url: '', time: 500 };
     const [inputs, setInputs] = useState({ ...lessonForm });
@@ -96,6 +97,7 @@ const Lessons = () => {
     };
     const data = {
         data: lessons.map((l, i) => ({ ...l, index: i + 1, courseName: l.course?.name, topicName: l.topic?.name })),
+        widthAc: 200,
         actions: [
             {
                 key: 'update',
@@ -177,6 +179,11 @@ const Lessons = () => {
         setValidated(false);
         setVisible(false);
     };
+    const setUrl = (e) => {
+        setInputs((prev) => {
+            return { ...prev, url: e.url, time: e.duration };
+        });
+    };
     return (
         <>
             <CCard>
@@ -228,12 +235,12 @@ const Lessons = () => {
                             <CFormFeedback invalid>Vui lòng chọn khóa học.</CFormFeedback>
                         </CCol>
                         <CCol lg="6">
-                            <CFormLabel htmlFor="validationServerUsername">Link bài học</CFormLabel>
-                            <CFormInput type="text" label="Code" required name="url" onChange={handleChange} value={inputs.url} />
+                            <CFormLabel htmlFor="validationServerUsername">Upload Video</CFormLabel>
+                            <UploadVideo setInfo={setUrl} />
                         </CCol>
                         <CCol lg="6">
                             <CFormLabel htmlFor="validationServerUsername">Thời lượng</CFormLabel>
-                            <CFormInput type="number" label="Code" required name="time" onChange={handleChange} value={inputs.time} />
+                            <CFormInput type="number" label="Code" required name="time" onChange={handleChange} value={inputs.time} disabled />
                         </CCol>
                         <CCol lg="12">
                             <CFormLabel htmlFor="validationServerUsername">Mô tả</CFormLabel>

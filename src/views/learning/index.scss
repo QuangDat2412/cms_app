@@ -28,7 +28,6 @@
         }
     }
     .btn-lesson {
-        border: 0 !important;
         padding-left: 20px;
         &:hover {
             background-color: #f0ddbb !important;
@@ -42,9 +41,7 @@
 .box-player-doc {
     display: flex;
     justify-content: center;
-    & > div {
-        width: 85%;
-    }
+    width: 100%;
 }
 .nav-bar-lesson {
     background-color: #29303b;
@@ -72,4 +69,12 @@
 .box {
     height: 100vh;
     overflow: hidden;
+}
+.box-iframe {
+    width: 100%;
+    height: 100%;
+    iframe {
+        width: 100%;
+        height: 100%;
+    }
 }

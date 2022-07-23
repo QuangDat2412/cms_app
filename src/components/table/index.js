@@ -3,7 +3,7 @@ import { CTable, CTableHead, CTableRow, CTableBody, CTableHeaderCell, CTableData
 import PropTypes from 'prop-types';
 import './index.scss';
 const TableCustom = ({ datas }) => {
-    const { header, data, actions } = datas;
+    const { header, data, actions, widthAc } = datas;
     return (
         <>
             <CTable>
@@ -17,7 +17,7 @@ const TableCustom = ({ datas }) => {
                             );
                         })}
                         {actions.length > 0 && (
-                            <CTableHeaderCell key={-1} style={{ width: '180px' }}>
+                            <CTableHeaderCell key={-1} style={{ width: widthAc }}>
                                 Hành động
                             </CTableHeaderCell>
                         )}

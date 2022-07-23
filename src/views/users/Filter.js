@@ -15,10 +15,10 @@ const Filter = (props) => {
             <CRow xs={{ gutterX: 2 }}>
                 <CCol lg="6">
                     <CRow>
-                        <CCol lg={5}>
+                        <CCol>
                             <h4>Danh sách người dùng</h4>
                         </CCol>
-                        <CCol lg={5}>
+                        <CCol>
                             <CButton type="button" color="secondary" variant="outline" id="button-addon1" onClick={open}>
                                 <CIcon icon={cilPlus} /> Thêm mới
                             </CButton>
