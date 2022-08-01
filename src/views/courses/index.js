@@ -70,47 +70,82 @@ const Courses = () => {
         data: courses.map((c, i) => {
             return { ...c, typeName: c.typeObj.name };
         }),
-        widthAc: 320,
-        actions: [
-            {
-                key: 'update',
-                value: 'Chỉnh sửa',
-                openMoDalAdd: function (user, type) {
-                    return openMoDalAdd(user, type);
-                },
-            },
-            {
-                key: 'detail',
-                value: 'Nội dung khóa học',
-                openMoDalAdd: function (data) {
-                    navigate('/courses/' + data.code, { replace: true });
-                },
-            },
-            {
-                key: 'delete',
-                value: 'Xoá',
-                openMoDalAdd: function (obj, type) {
-                    return deleteT(obj, type);
-                },
-            },
-        ],
+
         header: [
             {
-                key: 'code',
-                value: 'Mã khóa học',
+                dataIndex: 'code',
+                title: 'Mã khóa học',
             },
             {
-                key: 'name',
-                value: 'Tên khóa học',
+                dataIndex: 'name',
+                title: 'Tên khóa học',
             },
             {
-                key: 'typeName',
-                value: 'Loại khóa học',
+                dataIndex: 'typeName',
+                title: 'Loại khóa học',
             },
             {
-                key: 'status',
-                value: 'Trạng thái',
-                type: 'status',
+                dataIndex: '',
+                title: 'Trạng thái',
+                render: (a, b) => {
+                    return (
+                        <>
+                            <div
+                                style={{
+                                    color: '#fff',
+                                    backgroundColor: `${b.status === 1 ? '#2eb85c' : 'red'}`,
+                                    padding: '3px',
+                                    borderRadius: '5px',
+                                    width: '140px',
+                                    textAlign: 'center',
+                                }}
+                            >
+                                {b.status === 1 ? 'Đang hoạt động' : 'Ngừng hoạt dộng'}
+                            </div>
+                        </>
+                    );
+                },
+            },
+            {
+                title: 'Hoạt động',
+                dataIndex: '',
+                key: 'x',
+                render: (a, b) => {
+                    return (
+                        <>
+                            <a
+                                onClick={(event) => {
+                                    event.preventDefault();
+                                    openMoDalAdd(b, 'update');
+                                }}
+                                className="mx-2"
+                                href="/"
+                            >
+                                Chỉnh sửa
+                            </a>
+                            <a
+                                onClick={(event) => {
+                                    event.preventDefault();
+                                    navigate('/courses/' + b.code, { replace: true });
+                                }}
+                                className="mx-2"
+                                href="/"
+                            >
+                                Nội dung khóa học
+                            </a>
+                            <a
+                                onClick={(event) => {
+                                    event.preventDefault();
+                                    deleteT(b);
+                                }}
+                                className="mx-2"
+                                href="/"
+                            >
+                                Xóa
+                            </a>
+                        </>
+                    );
+                },
             },
         ],
     };

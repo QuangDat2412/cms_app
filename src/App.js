@@ -1,6 +1,10 @@
-import React, { Component, Suspense } from 'react';
+import React, { useEffect, Suspense } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { notification } from 'antd';
+import { useSelector } from 'react-redux';
+import { OthersSelector } from 'src/redux/others/slice';
 import './scss/style.scss';
+import 'antd/dist/antd.css';
 
 const loading = (
     <div className="pt-3 text-center">
@@ -17,22 +21,27 @@ const Page404 = React.lazy(() => import('./views/pages/page404/Page404'));
 const Learning = React.lazy(() => import('./views/learning'));
 const CourseDetails = React.lazy(() => import('./views/courseDetail'));
 
-class App extends Component {
-    render() {
-        return (
-            <BrowserRouter>
-                <Suspense fallback={loading}>
-                    <Routes>
-                        <Route exact path="/login" name="Login Page" element={<Login />} />
-                        <Route exact path="/courses/:code" name="Chi tiết khóa" element={<CourseDetails />} />
-                        <Route exact path="/learning/:code" name="Learning Page" element={<Learning />} />
-                        <Route exact path="/404" name="Page 404" element={<Page404 />} />
-                        <Route path="*" name="Trang chủ" element={<DefaultLayout />} />
-                    </Routes>
-                </Suspense>
-            </BrowserRouter>
-        );
-    }
-}
+const App = () => {
+    const toasrt = useSelector(OthersSelector.toasrt);
+    useEffect(() => {
+        if (toasrt.type)
+            notification[toasrt.type]({
+                description: toasrt.message,
+            });
+    }, [toasrt]);
+    return (
+        <BrowserRouter>
+            <Suspense fallback={loading}>
+                <Routes>
+                    <Route exact path="/login" name="Login Page" element={<Login />} />
+                    <Route exact path="/courses/:code" name="Chi tiết khóa" element={<CourseDetails />} />
+                    <Route exact path="/learning/:code" name="Learning Page" element={<Learning />} />
+                    <Route exact path="/404" name="Page 404" element={<Page404 />} />
+                    <Route path="*" name="Trang chủ" element={<DefaultLayout />} />
+                </Routes>
+            </Suspense>
+        </BrowserRouter>
+    );
+};
 
 export default App;

@@ -66,40 +66,60 @@ const Topics = () => {
         data: topics.map((c, i) => {
             return { ...c, course: c.course?.name, index: i + 1 };
         }),
-        widthAc: 200,
-        actions: [
-            {
-                key: 'update',
-                value: 'Chỉnh sửa',
-                openMoDalAdd: function (user, type) {
-                    return openMoDalAdd(user, type);
-                },
-            },
-            {
-                key: 'delete',
-                value: 'Xoá',
-                openMoDalAdd: function (obj, type) {
-                    return deleteT(obj, type);
-                },
-            },
-        ],
         header: [
             {
-                key: 'index',
-                value: 'STT',
+                dataIndex: 'index',
+                title: 'STT',
             },
             {
-                key: 'name',
-                value: 'Tên chủ đề',
+                dataIndex: 'name',
+                title: 'Tên chủ đề',
             },
             {
-                key: 'course',
-                value: 'Khoá học',
+                dataIndex: 'course',
+                title: 'Khoá học',
             },
             {
-                key: 'description',
-                value: 'Mô tả',
-                type: 'html',
+                dataIndex: '',
+                title: 'Mô tả',
+                render: (a, b) => {
+                    return (
+                        <>
+                            <span dangerouslySetInnerHTML={{ __html: b.description }} className="wrapword"></span>
+                        </>
+                    );
+                },
+            },
+            {
+                title: 'Hoạt động',
+                dataIndex: '',
+                key: 'x',
+                render: (a, b) => {
+                    return (
+                        <>
+                            <a
+                                onClick={(event) => {
+                                    event.preventDefault();
+                                    openMoDalAdd(b, 'update');
+                                }}
+                                className="mx-2"
+                                href="/"
+                            >
+                                Chỉnh sửa
+                            </a>
+                            <a
+                                onClick={(event) => {
+                                    event.preventDefault();
+                                    deleteT(b, 'delete');
+                                }}
+                                className="mx-2"
+                                href="/"
+                            >
+                                Xóa
+                            </a>
+                        </>
+                    );
+                },
             },
         ],
     };

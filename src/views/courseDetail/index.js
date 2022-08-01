@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AppHeaderDropdown } from '../../components/header';
 import { useDispatch, useSelector } from 'react-redux';
@@ -65,7 +65,7 @@ const CourseDetail = () => {
         } else if (type === 'ms') {
             return (m < 10 ? `0${m}` : m) + ':' + (s < 10 ? `0${s}` : s);
         } else {
-            return mDisplay + ' ' + sDisplay + '' + sDisplay;
+            return mDisplay + ' ' + sDisplay;
         }
     }
 

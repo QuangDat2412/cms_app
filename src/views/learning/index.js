@@ -60,11 +60,10 @@ const Learning = () => {
         } else if (type === 'ms') {
             return (m < 10 ? `0${m}` : m) + ':' + (s < 10 ? `0${s}` : s);
         } else {
-            return mDisplay + ' ' + sDisplay + '' + sDisplay;
+            return mDisplay + ' ' + sDisplay;
         }
     }
     const header = useRef();
-    const video = useRef();
     const headerC = useRef();
     const [headerH, setHeaderH] = useState(0);
     useEffect(() => {
@@ -121,10 +120,10 @@ const Learning = () => {
                     <div className="header" ref={headerC}>
                         <h5>Nội dung khóa học</h5>
                     </div>
-                    <CAccordion activeItemKey={0} style={{ height: `calc(100vh - ${headerH}px )` }}>
+                    <CAccordion activeItemKey={1} style={{ height: `calc(100vh - ${headerH}px )` }}>
                         {listTopics.map((t, ti) => {
                             return (
-                                <CAccordionItem itemKey={ti} key={ti}>
+                                <CAccordionItem itemKey={ti + 1} key={ti}>
                                     <CAccordionHeader>
                                         <div className="d-flex flex-column">
                                             <strong style={{ fontSize: '16px', flex: 1 }}>{`${ti + 1}. ${t.name}`}</strong>

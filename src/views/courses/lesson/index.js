@@ -97,50 +97,69 @@ const Lessons = () => {
     };
     const data = {
         data: lessons.map((l, i) => ({ ...l, index: i + 1, courseName: l.course?.name, topicName: l.topic?.name })),
-        widthAc: 200,
-        actions: [
-            {
-                key: 'update',
-                value: 'Chỉnh sửa',
-                openMoDalAdd: function (obj, type) {
-                    return openMoDalAdd(obj, type);
-                },
-            },
-            {
-                key: 'delete',
-                value: 'Xoá',
-                openMoDalAdd: function (obj, type) {
-                    return deleteL(obj, type);
-                },
-            },
-        ],
+
         header: [
             {
-                key: 'index',
-                value: 'STT',
+                dataIndex: 'index',
+                title: 'STT',
             },
             {
-                key: 'name',
-                value: 'Tên chủ đề',
+                dataIndex: 'name',
+                title: 'Tên chủ đề',
             },
             {
-                key: 'courseName',
-                value: 'Khoá học',
+                dataIndex: 'courseName',
+                title: 'Khoá học',
             },
             {
-                key: 'topicName',
-                value: 'Chủ đề',
+                dataIndex: 'topicName',
+                title: 'Chủ đề',
             },
             {
-                key: 'time',
-                value: 'Thời lượng',
-                width: '10%',
+                dataIndex: 'time',
+                title: 'Thời lượng',
             },
             {
-                key: 'description',
-                value: 'Mô tả',
-                type: 'html',
-                width: '30%',
+                dataIndex: '',
+                title: 'Mô tả',
+                render: (a, b) => {
+                    return (
+                        <>
+                            <span dangerouslySetInnerHTML={{ __html: b.description }} className="wrapword"></span>
+                        </>
+                    );
+                },
+            },
+            {
+                title: 'Hoạt động',
+                dataIndex: '',
+                key: 'x',
+                render: (a, b) => {
+                    return (
+                        <>
+                            <a
+                                onClick={(event) => {
+                                    event.preventDefault();
+                                    openMoDalAdd(b, 'update');
+                                }}
+                                className="mx-2"
+                                href="/"
+                            >
+                                Chỉnh sửa
+                            </a>
+                            <a
+                                onClick={(event) => {
+                                    event.preventDefault();
+                                    deleteL(b);
+                                }}
+                                className="mx-2"
+                                href="/"
+                            >
+                                Xóa
+                            </a>
+                        </>
+                    );
+                },
             },
         ],
     };
