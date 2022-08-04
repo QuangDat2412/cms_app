@@ -2,8 +2,8 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     isLoading: false,
-    sidebarShow: true,
     toasrt: {},
+    sidebarShow: true,
     sidebarUnfoldable: true,
     options: JSON.parse(localStorage.getItem('options')),
 };
@@ -18,13 +18,13 @@ const othersSlice = createSlice({
         toggleSideBar: (state, { payload }) => {
             state.sidebarShow = payload;
         },
-        showToasrt: (state, { payload }) => {
-            state.toasrt = payload;
-        },
         sidebarUnfoldable: (state, { payload }) => {
             state.sidebarShow = payload;
         },
         getOptions: () => {},
+        showToasrt: (state, { payload }) => {
+            state.toasrt = payload;
+        },
         saveOptions: (state, { payload }) => {
             state.options = payload;
         },

@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import './index.scss';
 import { uploadImage } from 'src/apis/options';
 import { DOMAIN } from 'src/constants/api';
+import { Button } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
 
 const UploadVideo = ({ setInfo, type, url }) => {
     const _uploadImage = () => {
@@ -10,7 +12,6 @@ const UploadVideo = ({ setInfo, type, url }) => {
         inputTag.type = 'file';
         inputTag.accept = 'video/*';
         inputTag.onchange = (_this) => {
-            debugger;
             let files = _this.target.files;
             let fileToUpload = files[0];
             const formData = new FormData();
@@ -32,9 +33,9 @@ const UploadVideo = ({ setInfo, type, url }) => {
     };
     return (
         <>
-            <div onClick={_uploadImage} className="ms-2 btn btn-outline-info">
+            <Button onClick={_uploadImage} className="btn-outline-info" icon={<UploadOutlined />}>
                 Upload
-            </div>
+            </Button>
         </>
     );
 };

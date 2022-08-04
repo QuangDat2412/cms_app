@@ -2,50 +2,38 @@ import React, { useEffect, useState, useCallback } from 'react';
 import Filter from './Filter';
 import { useDispatch, useSelector } from 'react-redux';
 import { userActions, userSelector } from 'src/redux/user/user.slice';
-import {
-    CFormLabel,
-    CForm,
-    CModalTitle,
-    CModalHeader,
-    CModalBody,
-    CModal,
-    CButton,
-    CFormInput,
-    CCol,
-    CModalFooter,
-    CFormSelect,
-    CFormFeedback,
-    CCard,
-    CCardBody,
-} from '@coreui/react';
+import { Card, Modal, Button, Form, Col, Input, Select, Row, Space, Tag } from 'antd';
+
 import TableCustom from 'src/components/table';
 const Students = () => {
     const dispatch = useDispatch();
+    const [form] = Form.useForm();
     const userForm = { fullName: '', isAdmin: true, email: '', password: 'abc123', avatar: '', phoneNumber: '', status: 1 };
-    const filterForm = { name: '', status: 0 };
-    const [visible, setVisible] = useState(false);
-    const [inputs, setInputs] = useState(userForm);
-    const [filter, setFilter] = useState(filterForm);
-    const [validated, setValidated] = useState(false);
     const [actionType, setActionType] = useState('');
     useEffect(() => {
-        dispatch(userActions.getUser(filter));
-    }, [filter, dispatch]);
+        dispatch(userActions.setFilter(filterForm));
+        return () => {
+            dispatch(userActions.handleVisibleModal(false));
+            dispatch(userActions.reset({ name: '', status: 0 }));
+        };
+    }, []);
     const users = useSelector(userSelector.users);
-
+    const openModal = useSelector(userSelector.openModal);
+    const filterForm = useSelector(userSelector.filterForm);
+    const loading = useSelector(userSelector.loading);
     const openMoDalAdd = (user, type) => {
         if (type === 'update') {
             const _user = { ...user };
-            setInputs(_user);
+            form.setFieldsValue(_user);
         } else if (type === 'add') {
-            setInputs(userForm);
+            form.setFieldsValue({ ...userForm });
         }
         setActionType(type);
-        setVisible(true);
+        dispatch(userActions.handleVisibleModal(true));
     };
     const data = {
         data: users.map((user, i) => {
-            return { ...user, index: i + 1, admin: user.isAdmin ? 'Admin' : 'Người dùng' };
+            return { ...user, index: i + 1, admin: user.isAdmin ? 'Admin' : 'Người dùng', key: i };
         }),
         header: [
             {
@@ -72,23 +60,9 @@ const Students = () => {
                 dataIndex: '',
                 title: 'Trạng thái',
                 render: (a, b) => {
-                    return (
-                        <>
-                            <div
-                                style={{
-                                    color: '#fff',
-                                    backgroundColor: `${b.status === 1 ? '#2eb85c' : 'red'}`,
-                                    padding: '3px',
-                                    borderRadius: '5px',
-                                    width: '140px',
-                                    textAlign: 'center',
-                                }}
-                            >
-                                {b.status === 1 ? 'Đang hoạt động' : 'Ngừng hoạt dộng'}
-                            </div>
-                        </>
-                    );
+                    return <Tag color={b.status === 1 ? '#2eb85c' : 'red'}> {b.status === 1 ? 'Đang hoạt động' : 'Ngừng hoạt dộng'}</Tag>;
                 },
+                width: 150,
             },
             {
                 title: 'Hoạt động',
@@ -113,95 +87,108 @@ const Students = () => {
             },
         ],
     };
-    const handleChangeFilter = useCallback((e) => {
-        setFilter((prev) => {
-            return { ...prev, [e.target.name]: e.target.value };
-        });
+    const handleChangeFilter = useCallback((e, key) => {
+        dispatch(userActions.setFilter({ [key]: e }));
     }, []);
-    const handleChange = useCallback((e) => {
-        setInputs((prev) => {
-            return { ...prev, [e.target.name]: e.target.value };
-        });
-    }, []);
-    const saveUser = (event) => {
-        event.preventDefault();
-        const form = event.currentTarget;
-        if (form.checkValidity()) {
-            Promise.resolve(dispatch(userActions.saveUser({ inputs, type: actionType })))
-                .then((data) => {
-                    closeModal();
-                })
-                .catch(() => {});
-        }
-        setValidated(true);
+    const saveUser = (value) => {
+        dispatch(userActions.saveUser(form.getFieldValue()));
     };
     const closeModal = () => {
-        setValidated(false);
-        setVisible(false);
+        dispatch(userActions.handleVisibleModal(false));
     };
     return (
         <>
-            <CCard>
-                <CCardBody>
-                    <Filter openMoDalAdd={openMoDalAdd} handleChangeFilter={handleChangeFilter} />
-                    <TableCustom datas={data} openMoDalAdd={openMoDalAdd} />
-                </CCardBody>
-            </CCard>
-
-            <CModal visible={visible} onClose={closeModal} size="lg">
-                <CModalHeader onClose={closeModal}>
-                    <CModalTitle>{actionType === 'add' ? 'Thêm mới người dùng' : 'Chỉnh sửa thông tin:'}</CModalTitle>
-                </CModalHeader>
-                <CModalBody>
-                    <CForm className="row g-3 needs-validation" noValidate validated={validated} onSubmit={saveUser}>
-                        <CCol lg="6">
-                            <CFormLabel htmlFor="validationServerUsername">Tên người dùng</CFormLabel>
-                            <CFormInput type="text" label="Tên người dùng" required name="fullName" onChange={handleChange} value={inputs.fullName} />
-                            <CFormFeedback invalid>Vui lòng nhập tên người dùng.</CFormFeedback>
-                        </CCol>
-                        <CCol lg="6">
-                            <CFormLabel htmlFor="validationServerUsername">Email</CFormLabel>
-                            <CFormInput type="email" label="Email" required name="email" onChange={handleChange} value={inputs.email} />
-                            <CFormFeedback invalid>Vui lòng nhập Email.</CFormFeedback>
-                        </CCol>
-                        <CCol lg="6">
-                            <CFormLabel htmlFor="validationServerUsername">Số điện thoại</CFormLabel>
-                            <CFormInput
-                                type="text"
-                                label="Số điện thoại"
-                                required
+            <Card>
+                <Filter openMoDalAdd={openMoDalAdd} handleChangeFilter={handleChangeFilter} />
+                <TableCustom datas={data} loading={loading} />
+            </Card>
+            <Modal
+                visible={openModal}
+                onCancel={closeModal}
+                Modal
+                title={actionType === 'add' ? 'Thêm mới chủ đề' : 'Chỉnh sửa chủ đề'}
+                centered
+                footer={false}
+                width={800}
+                forceRender
+            >
+                <Form form={form} name="control-hooks" onFinish={saveUser} labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
+                    <Row gutter={16}>
+                        <Col span={12}>
+                            <Form.Item
+                                name="fullName"
+                                label="Tên người dùng"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Vui lòng nhập tên người dùng',
+                                    },
+                                ]}
+                            >
+                                <Input />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item
+                                name="email"
+                                label="Email"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Vui lòng nhập email',
+                                    },
+                                ]}
+                            >
+                                <Input />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item
                                 name="phoneNumber"
-                                onChange={handleChange}
-                                value={inputs.phoneNumber}
-                            />
-                            <CFormFeedback invalid>Vui lòng nhập số điện thoại.</CFormFeedback>
-                        </CCol>
-                        <CCol lg="6">
-                            <CFormLabel htmlFor="validationServerUsername">Trạng thái</CFormLabel>
-                            <CFormSelect required onChange={handleChange} name="status" value={inputs.status}>
-                                <option value="1">Đang hoạt động</option>
-                                <option value="2">Ngừng hoạt động</option>
-                            </CFormSelect>
-                        </CCol>
-                        <CCol lg="6">
-                            <CFormLabel htmlFor="validationServerUsername">Chức vụ</CFormLabel>
-                            <CFormSelect required onChange={handleChange} name="isAdmin" value={inputs.isAdmin}>
-                                <option value="true">Admin</option>
-                                <option value="false">Người dùng</option>
-                            </CFormSelect>
-                        </CCol>
-
-                        <CModalFooter>
-                            <CButton color="secondary" onClick={closeModal} className="btn-modal">
-                                Đóng
-                            </CButton>
-                            <CButton color="warning" type="submit" className="btn-modal">
-                                Lưu lại
-                            </CButton>
-                        </CModalFooter>
-                    </CForm>
-                </CModalBody>
-            </CModal>
+                                label="Số điện thoaị"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Vui lòng nhập số điện thoại',
+                                    },
+                                ]}
+                            >
+                                <Input />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item name="isAdmin" label="Vai trò">
+                                <Select>
+                                    <Select.Option value={true}>Admin</Select.Option>
+                                    <Select.Option value={false}>Người dùng</Select.Option>
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item name="status" label="Trạng thái">
+                                <Select>
+                                    <Select.Option value={1}>Đang hoạt động</Select.Option>
+                                    <Select.Option value={2}>Ngừng hoạt động</Select.Option>
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col span={24}>
+                            <Row justify="end">
+                                <Col>
+                                    <Space>
+                                        <Button onClick={closeModal} htmlType="button">
+                                            Đóng
+                                        </Button>
+                                        <Button type="primary" htmlType="submit" loading={loading} disabled={loading}>
+                                            Lưu lại
+                                        </Button>
+                                    </Space>
+                                </Col>
+                            </Row>
+                        </Col>
+                    </Row>
+                </Form>
+            </Modal>
         </>
     );
 };

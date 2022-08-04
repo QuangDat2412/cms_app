@@ -1,43 +1,86 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { CContainer, CHeader, CHeaderBrand, CHeaderDivider, CHeaderNav, CHeaderToggler, CNavLink, CNavItem } from '@coreui/react';
-import CIcon from '@coreui/icons-react';
-import { cilMenu } from '@coreui/icons';
-import { OthersAction, OthersSelector } from 'src/redux/others/slice';
-import { AppBreadcrumb } from './index';
-import { AppHeaderDropdown } from './header/index';
-import { logo } from 'src/assets/brand/logo';
+import logo from 'src/assets/logo.png';
+import { Layout, Menu, Dropdown } from 'antd';
+import { authSelector, authActions } from 'src/redux/auth/auth.slice';
+import UploadImage from './uploadImage';
+import { UserOutlined } from '@ant-design/icons';
+import { Avatar } from 'antd';
+import { useNavigate } from 'react-router-dom';
+
+const { Header } = Layout;
+const MenuItem = () => {
+    const currentUser = useSelector(authSelector.currentUser);
+    let navigate = useNavigate();
+    const dispatch = useDispatch();
+    const logout = (e) => {
+        e.preventDefault();
+        dispatch(authActions.logout());
+        navigate('/login', { replace: true });
+    };
+    return (
+        <Menu
+            items={[
+                {
+                    key: '1',
+                    label: (
+                        <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">
+                            {currentUser.fullName}
+                        </a>
+                    ),
+                },
+                {
+                    key: '2',
+                    label: (
+                        <a
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            href="/"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                dispatch(authActions.handleVisibleModal(true));
+                            }}
+                        >
+                            Cài đặt
+                        </a>
+                    ),
+                },
+                {
+                    key: '3',
+                    label: (
+                        <a
+                            rel="noopener noreferrer"
+                            href="/"
+                            onClick={(e) => {
+                                logout(e);
+                            }}
+                        >
+                            Đăng xuất
+                        </a>
+                    ),
+                },
+            ]}
+        />
+    );
+};
 
 const AppHeader = () => {
-    const dispatch = useDispatch();
-    const sidebarShow = useSelector(OthersSelector.sidebarShow);
-
+    const currentUser = useSelector(authSelector.currentUser);
     return (
-        <CHeader position="sticky" className="mb-4">
-            <CContainer fluid>
-                <CHeaderToggler className="ps-1" onClick={() => dispatch(OthersAction.toggleSideBar(!sidebarShow))}>
-                    <CIcon icon={cilMenu} size="lg" />
-                </CHeaderToggler>
-                <CHeaderBrand className="mx-auto d-md-none" to="/">
-                    <CIcon icon={logo} height={48} alt="Logo" />
-                </CHeaderBrand>
-                <CHeaderNav className="d-none d-md-flex me-auto">
-                    <CNavItem>
-                        <CNavLink to="/courses" component={NavLink}>
-                            Trang chủ
-                        </CNavLink>
-                    </CNavItem>
-                </CHeaderNav>
-                <CHeaderNav className="ms-3">
-                    <AppHeaderDropdown />
-                </CHeaderNav>
-            </CContainer>
-            <CHeaderDivider />
-            <CContainer fluid>
-                <AppBreadcrumb />
-            </CContainer>
-        </CHeader>
+        <>
+            <Header className="header" style={{ backgroundColor: '#f2ce5f' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', height: '100%' }}>
+                    <a href="/courses" style={{ textDecoration: 'none', color: '#fff', display: 'inline-flex', alignItems: 'center' }}>
+                        <img src={logo} height={40} alt="Logo" style={{ cursor: 'pointer' }} />
+                    </a>
+                    <div>
+                        <Dropdown overlay={<MenuItem />} placement="bottom">
+                            <Avatar size={40} icon={<UserOutlined />} src={currentUser?.avatar} />
+                        </Dropdown>
+                    </div>
+                </div>
+            </Header>
+        </>
     );
 };
 

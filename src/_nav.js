@@ -1,40 +1,22 @@
 import React from 'react';
-import CIcon from '@coreui/icons-react';
-import { cilUser, cilBook } from '@coreui/icons';
-import { CNavItem, CNavGroup } from '@coreui/react';
+import { UserOutlined } from '@ant-design/icons';
+function getItem(label, key, icon, children) {
+    return {
+        key,
+        icon,
+        children,
+        label,
+    };
+}
 
 const _nav = [
-    {
-        component: CNavGroup,
-        name: 'Khóa học',
-        icon: <CIcon icon={cilBook} customClassName="nav-icon" />,
-        items: [
-            {
-                component: CNavItem,
-                name: 'Danh sách khóa học',
-                to: '/courses',
-            },
-            {
-                component: CNavItem,
-                name: 'Chủ đề',
-                to: '/topics',
-            },
-            {
-                component: CNavItem,
-                name: 'Bài học',
-                to: '/lessons',
-            },
-        ],
-    },
-    {
-        component: CNavItem,
-        name: 'Danh sách người dùng',
-        to: '/users',
-        icon: <CIcon icon={cilUser} customClassName="nav-icon" />,
-        badge: {
-            color: 'info',
-        },
-    },
+    getItem('Khóa học', 'course', <UserOutlined />, [
+        getItem('Danh sách khóa học', `courses`),
+        getItem('Danh sách chủ đề', `topics`),
+        getItem('Danh sách bài học', `lessons`),
+        getItem('Danh sách loại khóa học', `typeCourses`),
+    ]),
+    getItem('Danh sách người dùng', 'users', <UserOutlined />),
 ];
 
 export default _nav;

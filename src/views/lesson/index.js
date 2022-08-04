@@ -1,88 +1,95 @@
+/* eslint-disable eqeqeq */
 import React, { useState, useCallback, useEffect } from 'react';
 import Filter from './Filter';
 import { Card, Modal, Button, Form, Col, Input, Select, Row, Space, Popconfirm, Tag } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { courseActions, courseSelector } from 'src/redux/course/course.slice';
-import { OthersSelector } from 'src/redux/others/slice';
+import { lessonActions, lessonSelector } from 'src/redux/lesson/lesson.slice';
 import TableCustom from 'src/components/table';
-import { useNavigate } from 'react-router-dom';
-import UploadImage from 'src/components/uploadImage';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import UploadVideo from '../../components/uploadVIdeo';
 
-const Courses = () => {
-    let navigate = useNavigate();
+const Lessons = () => {
+    const lessonForm = { name: '', topicId: '', description: '', image: '', code: [], url: '', time: 500 };
     const [form] = Form.useForm();
-    const courseForm = { name: '', code: '123', status: 1, type: '', image: '', description: '' };
-    const [link, setLink] = useState('');
-    const options = useSelector(OthersSelector.options);
-    const typeCourse = options?.typeCourse || [];
     const dispatch = useDispatch();
-    const courses = useSelector(courseSelector.courses);
-    const openModal = useSelector(courseSelector.openModal);
-    const loading = useSelector(courseSelector.loading);
-    const filterForm = useSelector(courseSelector.filterForm);
+    const filterForm = useSelector(lessonSelector.filterForm);
     useEffect(() => {
-        dispatch(courseActions.setFilter(filterForm));
+        dispatch(courseActions.setFilter({ name: '', status: 1 }));
         return () => {
-            dispatch(courseActions.handleVisibleModal(false));
-            dispatch(courseActions.reset({ name: '', status: 0 }));
+            dispatch(lessonActions.handleVisibleModal(false));
+            dispatch(lessonActions.reset({ name: '', courseId: '0', topicId: '0' }));
         };
     }, []);
+    const loading = useSelector(lessonSelector.loading);
+    const [_topics, set_Topics] = useState([]);
+    const [__topics, set__Topics] = useState([]);
+    const courses = useSelector(courseSelector.courses);
+    const openModal = useSelector(lessonSelector.openModal);
+    const lessons = useSelector(lessonSelector.lessons);
+    useEffect(() => {
+        if (courses[0]?._id) {
+            dispatch(lessonActions.setFilter({ ...filterForm, courseId: courses[0]?._id }));
+            set_Topics(courses[0]?.listTopics || []);
+        }
+    }, [courses]);
     const [actionType, setActionType] = useState('');
     const makeCode = (n) => {
         var text = '';
         var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-
         for (var i = 0; i < n; i++) text += possible.charAt(Math.floor(Math.random() * possible.length));
-
         return text;
     };
-
-    const openMoDalAdd = (course, type) => {
+    const openMoDalAdd = (lesson, type) => {
         if (type === 'update') {
-            const _course = { ...course };
-            form.setFieldsValue(_course);
+            const _lesson = { ...lesson };
+            const _c = courses.find((c) => {
+                return c._id === _lesson.courseId;
+            });
+            set__Topics(_c.listTopics);
+            form.setFieldsValue(_lesson);
         } else if (type === 'add') {
-            form.setFieldsValue({ ...courseForm, code: makeCode(6) });
+            form.setFieldsValue({ ...lessonForm, code: makeCode(6), courseId: courses[0]._id });
+            set__Topics(courses[0].listTopics);
         }
-        setLink(form.getFieldValue().image);
         setActionType(type);
-        dispatch(courseActions.handleVisibleModal(true));
+        dispatch(lessonActions.handleVisibleModal(true));
+    };
+    const deleteL = (obj) => {
+        dispatch(lessonActions.deleteLesson(obj));
     };
     const data = {
-        data: courses.map((c, i) => {
-            return { ...c, typeName: c.typeObj.name, key: i };
-        }),
-
+        data: lessons.map((l, i) => ({ ...l, index: i + 1, courseName: l.course?.name, topicName: l.topic?.name, key: i })),
         header: [
             {
-                dataIndex: 'code',
-                title: 'Mã khóa học',
-                width: 150,
+                dataIndex: 'index',
+                width: 10,
+                title: 'STT',
             },
             {
                 dataIndex: 'name',
-                title: 'Tên khóa học',
                 width: 150,
+                title: 'Tên chủ đề',
             },
             {
-                dataIndex: 'typeName',
-                title: 'Loại khóa học',
                 width: 150,
+                dataIndex: 'courseName',
+                title: 'Khoá học',
             },
             {
-                dataIndex: '',
-                title: 'Trạng thái',
-                render: (a, b) => {
-                    return <Tag color={b.status === 1 ? '#2eb85c' : 'red'}> {b.status === 1 ? 'Đang hoạt động' : 'Ngừng hoạt dộng'}</Tag>;
-                },
                 width: 150,
+                dataIndex: 'topicName',
+                title: 'Chủ đề',
+            },
+            {
+                width: 150,
+                dataIndex: 'time',
+                title: 'Thời lượng',
             },
             {
                 dataIndex: '',
                 title: 'Mô tả',
-                width: 500,
                 render: (a, b) => {
                     return (
                         <>
@@ -93,8 +100,9 @@ const Courses = () => {
             },
             {
                 title: 'Hoạt động',
+                width: 250,
                 dataIndex: '',
-                width: 300,
+                key: 'x',
                 render: (a, b) => {
                     return (
                         <Space>
@@ -107,21 +115,12 @@ const Courses = () => {
                             >
                                 Chỉnh sửa
                             </a>
-                            <a
-                                onClick={(event) => {
-                                    event.preventDefault();
-                                    navigate('/courses/' + b.code, { replace: true });
-                                }}
-                                href="/"
-                            >
-                                Nội dung khóa học
-                            </a>
                             <Popconfirm
                                 title="Bạn chắc chắn muốn xóa bài học này?"
                                 okText="Có"
                                 cancelText="Đóng"
                                 onConfirm={() => {
-                                    deleteT(b);
+                                    deleteL(b);
                                 }}
                             >
                                 <a href="/">Xóa</a>
@@ -132,33 +131,54 @@ const Courses = () => {
             },
         ],
     };
-    const deleteT = (obj) => {
-        dispatch(courseActions.deleteCourse(obj));
-    };
-    const handleChangeFilter = useCallback((e, key) => {
-        dispatch(courseActions.setFilter({ [key]: e }));
-    }, []);
-    const saveCourse = (value) => {
-        dispatch(courseActions.saveCourse(form.getFieldValue()));
+    const handleChangeFilter = useCallback(
+        (e, type) => {
+            if (type === 'courseId') {
+                dispatch(lessonActions.setFilter({ ...filterForm, courseId: e, topicId: '0' }));
+                const _c = courses.find((c) => {
+                    return c._id === e;
+                });
+                set_Topics(_c?.listTopics || []);
+            } else {
+                dispatch(lessonActions.setFilter({ ...filterForm, [type]: e }));
+            }
+        },
+        [courses, filterForm]
+    );
+    const saveCourse = (event) => {
+        dispatch(lessonActions.saveLesson(form.getFieldValue()));
     };
     const closeModal = () => {
-        dispatch(courseActions.handleVisibleModal(false));
+        dispatch(lessonActions.handleVisibleModal(false));
     };
     const setUrl = (e) => {
-        form.setFieldsValue({ ...form.getFieldValue(), image: e });
-        setLink(e);
+        form.setFieldsValue({ ...form.getFieldValue(), url: e.url, time: e.duration });
+    };
+    const changeCourse = (e) => {
+        const _c = courses.find((c) => {
+            return c._id == e;
+        });
+        set__Topics(_c?.listTopics || []);
+
+        form.setFieldsValue({ ...form.getFieldValue(), topicId: _c?.listTopics[0]._id });
     };
     return (
         <>
             <Card>
-                <Filter openMoDalAdd={openMoDalAdd} handleChangeFilter={handleChangeFilter} />
+                <Filter
+                    openMoDalAdd={openMoDalAdd}
+                    handleChangeFilter={handleChangeFilter}
+                    courses={courses}
+                    topics={_topics}
+                    filterForm={filterForm}
+                />
                 <TableCustom datas={data} loading={loading} />
             </Card>
             <Modal
                 visible={openModal}
                 onCancel={closeModal}
                 Modal
-                title={actionType === 'add' ? 'Thêm mới khóa học' : 'Chỉnh sửa khóa học'}
+                title={actionType === 'add' ? 'Thêm mới bài học' : 'Chỉnh sửa bài học'}
                 centered
                 footer={false}
                 width={800}
@@ -167,13 +187,18 @@ const Courses = () => {
                 <Form form={form} name="control-hooks" onFinish={saveCourse} labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
                     <Row gutter={16}>
                         <Col span={12}>
+                            <Form.Item label="Code" name="code">
+                                <Input disabled />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
                             <Form.Item
+                                label="Tên khóa bài học"
                                 name="name"
-                                label="Tên khóa học"
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Vui lòng nhập tên khóa học',
+                                        message: 'Vui lòng nhập tên bài học học',
                                     },
                                 ]}
                             >
@@ -181,32 +206,19 @@ const Courses = () => {
                             </Form.Item>
                         </Col>
                         <Col span={12}>
-                            <Form.Item name="code" label="Code">
-                                <Input disabled />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item name="status" label="Trạng thái">
-                                <Select>
-                                    <Select.Option value={1}>Đang hoạt động</Select.Option>
-                                    <Select.Option value={2}>Ngừng hoạt động</Select.Option>
-                                </Select>
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
                             <Form.Item
-                                name="type"
-                                label="Loại khóa học"
+                                name="courseId"
+                                label="Khóa học"
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Vui lòng chọn loại khóa học',
+                                        message: 'Vui lòng chọn khóa học',
                                     },
                                 ]}
                             >
-                                <Select>
+                                <Select onSelect={changeCourse}>
                                     <Select.Option value="">Chọn khóa học</Select.Option>
-                                    {typeCourse.map((t) => {
+                                    {courses.map((t) => {
                                         return (
                                             <Select.Option value={t._id} key={t._id}>
                                                 {t.name}
@@ -214,6 +226,39 @@ const Courses = () => {
                                         );
                                     })}
                                 </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item
+                                name="topicId"
+                                label="Chủ đề"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Vui lòng chọn chủ đề',
+                                    },
+                                ]}
+                            >
+                                <Select>
+                                    <Select.Option value="">Chọn chủ đề</Select.Option>
+                                    {__topics.map((t) => {
+                                        return (
+                                            <Select.Option value={t._id} key={t._id}>
+                                                {t.name}
+                                            </Select.Option>
+                                        );
+                                    })}
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item label="Video" name="url">
+                                <UploadVideo setInfo={setUrl} />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item label=" Thời lượng" name="time">
+                                <Input disabled />
                             </Form.Item>
                         </Col>
                         <Col span={24}>
@@ -227,11 +272,6 @@ const Courses = () => {
                                 }}
                             >
                                 <CKEditor editor={ClassicEditor} />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item label="Hình ảnh" name="image">
-                                <UploadImage type="thumbnail" setUrl={setUrl} url={link} />
                             </Form.Item>
                         </Col>
                         <Col span={24}>
@@ -255,4 +295,4 @@ const Courses = () => {
     );
 };
 
-export default Courses;
+export default Lessons;

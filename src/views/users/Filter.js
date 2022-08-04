@@ -1,8 +1,7 @@
 import React from 'react';
-import CIcon from '@coreui/icons-react';
-import { CCol, CRow, CFormSelect, CInputGroup, CInputGroupText, CFormInput, CButton } from '@coreui/react';
-import { cilPlus, cilSearch } from '@coreui/icons';
+import { Button, Col, Input, Select, Row } from 'antd';
 import PropTypes from 'prop-types';
+const { Search } = Input;
 
 const Filter = (props) => {
     const { openMoDalAdd, handleChangeFilter } = props;
@@ -12,43 +11,43 @@ const Filter = (props) => {
     };
     return (
         <>
-            <CRow xs={{ gutterX: 2 }}>
-                <CCol lg="6">
-                    <CRow>
-                        <CCol>
-                            <h4>Danh sách người dùng</h4>
-                        </CCol>
-                        <CCol>
-                            <CButton type="button" color="secondary" variant="outline" id="button-addon1" onClick={open}>
-                                <CIcon icon={cilPlus} /> Thêm mới
-                            </CButton>
-                        </CCol>
-                    </CRow>
-                </CCol>
-                <CCol lg={3}>
-                    <CInputGroup className="mb-3">
-                        <CInputGroupText id="basic-addon1">Trạng thái</CInputGroupText>
-                        <CFormSelect
-                            aria-label="Default select example"
-                            onChange={handleChangeFilter}
-                            name="status"
-                            options={[
-                                { label: 'Tất cả', value: '0' },
-                                { label: 'Đang hoạt động', value: '1' },
-                                { label: 'Ngừng hoạt động', value: '2' },
-                            ]}
-                        />
-                    </CInputGroup>
-                </CCol>
-                <CCol lg="3">
-                    <CInputGroup className="mb-3">
-                        <CInputGroupText id="basic-addon1">
-                            <CIcon icon={cilSearch} size="xl" />
-                        </CInputGroupText>
-                        <CFormInput placeholder="Tìm kiếm theo tên người dùng" onChange={handleChangeFilter} name="name" />
-                    </CInputGroup>
-                </CCol>
-            </CRow>
+            <Row gutter={16}>
+                <Col span={12}>
+                    <Row>
+                        <Col span={10}>
+                            <h2>Danh sác người dùng</h2>
+                        </Col>
+                        <Col span={14}>
+                            <Button type="button" color="secondary" variant="outline" id="button-addon1" onClick={open}>
+                                Thêm mới
+                            </Button>
+                        </Col>
+                    </Row>
+                </Col>
+                <Col span={6}>
+                    <Select
+                        onSelect={(e) => {
+                            handleChangeFilter(e, 'status');
+                        }}
+                        defaultValue={'0'}
+                        style={{ width: ' 100%' }}
+                        suffixIcon="Trạng thái"
+                        options={[
+                            { label: 'Tất cả', value: '0' },
+                            { label: 'Đang hoạt động', value: '1' },
+                            { label: 'Ngừng hoạt động', value: '2' },
+                        ]}
+                    />
+                </Col>
+                <Col span={6}>
+                    <Search
+                        placeholder="Tìm kiếm người dùng"
+                        onSearch={(e) => {
+                            handleChangeFilter(e, 'name');
+                        }}
+                    />
+                </Col>
+            </Row>
         </>
     );
 };

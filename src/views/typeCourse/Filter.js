@@ -12,12 +12,12 @@ const Filter = (props) => {
     return (
         <>
             <Row gutter={16}>
-                <Col span={12}>
+                <Col span={18}>
                     <Row>
                         <Col span={8}>
-                            <h2>Danh sác khóa học</h2>
+                            <h2>Danh sách loại khóa học</h2>
                         </Col>
-                        <Col span={16}>
+                        <Col span={12}>
                             <Button type="button" color="secondary" variant="outline" id="button-addon1" onClick={open}>
                                 Thêm mới
                             </Button>
@@ -25,23 +25,8 @@ const Filter = (props) => {
                     </Row>
                 </Col>
                 <Col span={6}>
-                    <Select
-                        onSelect={(e) => {
-                            handleChangeFilter(e, 'status');
-                        }}
-                        defaultValue={'0'}
-                        style={{ width: ' 100%' }}
-                        suffixIcon="Trạng thái"
-                        options={[
-                            { label: 'Tất cả', value: '0' },
-                            { label: 'Đang hoạt động', value: '1' },
-                            { label: 'Ngừng hoạt động', value: '2' },
-                        ]}
-                    />
-                </Col>
-                <Col span={6}>
                     <Search
-                        placeholder="Tìm kiếm chủ đề"
+                        placeholder="Tìm kiếm loại khóa học"
                         onSearch={(e) => {
                             handleChangeFilter(e, 'name');
                         }}
@@ -54,5 +39,6 @@ const Filter = (props) => {
 Filter.propTypes = {
     openMoDalAdd: PropTypes.func,
     handleChangeFilter: PropTypes.func,
+    courses: PropTypes.array,
 };
 export default Filter;

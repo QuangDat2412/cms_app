@@ -1,42 +1,5 @@
-.box-controls {
-    .accordion-body {
-        padding: 0 !important;
-    }
-    .accordion {
-        overflow-y: auto;
-    }
-    .accordion-button {
-        padding-top: 0 !important;
-        padding-bottom: 0 !important;
-    }
-    .accordion-button::after {
-        width: 0 !important;
-    }
-    .header {
-        padding-left: 20px;
-    }
-    .count {
-        display: flex;
-        margin: 0;
-        padding-left: 0;
-        list-style-type: none;
-        font-size: 14px;
-        .space {
-            margin-top: 1px;
-            opacity: 0.8;
-            padding: 0 8px;
-        }
-    }
-    .btn-lesson {
-        padding-left: 20px;
-        &:hover {
-            background-color: #f0ddbb !important;
-            cursor: pointer;
-        }
-    }
-    .active {
-        background-color: #f0ddbb !important;
-    }
+.active {
+    background-color: #f0ddbb !important;
 }
 .box-player-doc {
     display: flex;
@@ -76,5 +39,17 @@
     iframe {
         width: 100%;
         height: 100%;
+    }
+}
+
+.custom-collapse {
+    .ant-collapse-content-box {
+        padding-right: 0 !important;
+        padding-left: 0 !important;
+    }
+    .ant-list-item {
+        padding-right: 16px !important;
+        padding-left: 16px !important;
+        cursor: pointer;
     }
 }
