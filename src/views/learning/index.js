@@ -15,8 +15,8 @@ import { authSelector } from 'src/redux/auth/auth.slice';
 import socketIOClient from 'socket.io-client';
 import doneImg from '../../assets/done.png';
 import { DoubleLeftOutlined } from '@ant-design/icons';
+import { DOMAIN } from 'src/constants/api';
 
-const host = 'http://localhost:2412';
 const { TextArea } = Input;
 const { Title } = Typography;
 const { Header, Content } = Layout;
@@ -39,7 +39,7 @@ const Learning = () => {
         if (code) {
             dispatch(courseActions.getCourseByCode({ code: code }));
         }
-        socketRef.current = socketIOClient.connect(host);
+        socketRef.current = socketIOClient.connect(DOMAIN);
         socketRef.current.on('getMessage', (users) => {
             setGet((p) => p + 1);
         });
