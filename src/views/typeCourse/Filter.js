@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Col, Input, Select, Row } from 'antd';
+import { Button, Col, Input, Row } from 'antd';
 import PropTypes from 'prop-types';
 const { Search } = Input;
 
