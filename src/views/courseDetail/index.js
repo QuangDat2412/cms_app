@@ -31,7 +31,11 @@ const CourseDetail = () => {
         total = total + t.listLessons.length;
         return { ...t, listLessons: ll };
     });
-
+    useEffect(() => {
+        if (!currentUser?.email) {
+            navigate('/login', { replace: true });
+        }
+    }, [currentUser, navigate]);
     const lessonCount = listTopics.reduce((p, n) => {
         return p + n.listLessons.length;
     }, 0);

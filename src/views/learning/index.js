@@ -33,7 +33,11 @@ const Learning = () => {
     const learn = useSelector(courseSelector.learn);
     const currentUser = useSelector(authSelector.currentUser);
     const socketRef = useRef();
-
+    useEffect(() => {
+        if (!currentUser?.email) {
+            navigate('/login', { replace: true });
+        }
+    }, [currentUser, navigate]);
     useEffect(() => {
         const code = currentLocation.split('/')[2];
         if (code) {

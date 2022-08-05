@@ -18,11 +18,6 @@ const App = () => {
     const toasrt = useSelector(OthersSelector.toasrt);
     const currentUser = useSelector(authSelector.currentUser);
     useEffect(() => {
-        if (!currentUser?.email) {
-            navigate('/login', { replace: true });
-        }
-    }, [currentUser, navigate]);
-    useEffect(() => {
         if (toasrt.type)
             notification[toasrt.type]({
                 description: toasrt.message,

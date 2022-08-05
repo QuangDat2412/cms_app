@@ -18,6 +18,11 @@ const DefaultLayout = () => {
     const [collapsed, setCollapsed] = useState(false);
     const openModal = useSelector(authSelector.openModal);
     const currentUser = useSelector(authSelector.currentUser);
+    useEffect(() => {
+        if (!currentUser?.email) {
+            navigate('/login', { replace: true });
+        }
+    }, [currentUser, navigate]);
     const [form] = Form.useForm();
     const [link, setLink] = useState('');
     const loading = useSelector(authSelector.loading);
