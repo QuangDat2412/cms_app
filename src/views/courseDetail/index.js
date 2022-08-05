@@ -5,14 +5,13 @@ import { courseActions, courseSelector } from 'src/redux/course/course.slice';
 import { authSelector } from 'src/redux/auth/auth.slice';
 import './index.scss';
 import { ApartmentOutlined } from '@ant-design/icons';
-
+import { AppHeader } from 'src/components';
 import { Card, Button, Col, Row, Space, Collapse, Layout, Typography, List } from 'antd';
 const { Title, Text } = Typography;
 const { Panel } = Collapse;
 const { Header, Content } = Layout;
 
 const CourseDetail = () => {
-    const header = useRef();
     let navigate = useNavigate();
     const currentLocation = useLocation().pathname;
     const code = currentLocation.split('/')[2];
@@ -66,17 +65,14 @@ const CourseDetail = () => {
     return (
         <>
             <Layout style={{ height: '100vh' }}>
-                <Header className="header" ref={header}>
-                    <div className="logo" />
-                    {/* <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']} /> */}
-                </Header>
+                <AppHeader />
                 <Layout>
                     <Content>
                         <Row>
                             <Col
                                 span={18}
                                 style={{
-                                    height: `calc(100vh - ${header.current?.clientHeight}px )`,
+                                    height: `calc(100vh - 64px )`,
                                     overflowY: 'overlay',
                                 }}
                             >
