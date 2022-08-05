@@ -1,7 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable eqeqeq */
 import React, { useState, useCallback, useEffect } from 'react';
 import Filter from './Filter';
-import { Card, Modal, Button, Form, Col, Input, Select, Row, Space, Popconfirm, Tag } from 'antd';
+import { Card, Modal, Button, Form, Col, Input, Select, Row, Space, Popconfirm } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { courseActions, courseSelector } from 'src/redux/course/course.slice';
 import { lessonActions, lessonSelector } from 'src/redux/lesson/lesson.slice';

@@ -18,7 +18,7 @@ import { DoubleLeftOutlined } from '@ant-design/icons';
 
 const host = 'http://localhost:2412';
 const { TextArea } = Input;
-const { Title, Text } = Typography;
+const { Title } = Typography;
 const { Header, Content } = Layout;
 const { Panel } = Collapse;
 

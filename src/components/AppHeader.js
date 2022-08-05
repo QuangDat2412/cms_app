@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import logo from 'src/assets/logo.png';
 import { Layout, Menu, Dropdown } from 'antd';
 import { authSelector, authActions } from 'src/redux/auth/auth.slice';
-import UploadImage from './uploadImage';
 import { UserOutlined } from '@ant-design/icons';
 import { Avatar } from 'antd';
 import { useNavigate } from 'react-router-dom';

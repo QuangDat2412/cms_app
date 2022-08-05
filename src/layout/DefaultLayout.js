@@ -1,3 +1,5 @@
+/* eslint-disable eqeqeq */
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Layout, Menu } from 'antd';
 import { Modal, Button, Form, Col, Input, Row, Space } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
@@ -22,7 +24,6 @@ const DefaultLayout = () => {
     const dispatch = useDispatch();
     useEffect(() => {
         if (openModal) {
-            debugger;
             form.setFieldsValue({ ...currentUser, password: '' });
             setLink(form.getFieldValue().avatar);
         }
