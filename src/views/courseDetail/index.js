@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { courseActions, courseSelector } from 'src/redux/course/course.slice';
@@ -9,7 +9,7 @@ import { AppHeader } from 'src/components';
 import { Card, Button, Col, Row, Space, Collapse, Layout, Typography, List } from 'antd';
 const { Title, Text } = Typography;
 const { Panel } = Collapse;
-const { Header, Content } = Layout;
+const { Content } = Layout;
 
 const CourseDetail = () => {
     let navigate = useNavigate();

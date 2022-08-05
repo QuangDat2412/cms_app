@@ -3,7 +3,6 @@ import { Navigate, Route, Routes, BrowserRouter } from 'react-router-dom';
 import { notification, Spin } from 'antd';
 import { useSelector } from 'react-redux';
 import { OthersSelector } from 'src/redux/others/slice';
-import 'antd/dist/antd.css';
 import routes from './routes';
 import { authSelector } from 'src/redux/auth/auth.slice';
 // Containers
