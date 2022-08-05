@@ -1,5 +1,5 @@
 import React from 'react';
-import { UserOutlined } from '@ant-design/icons';
+import { UserOutlined, UnorderedListOutlined } from '@ant-design/icons';
 function getItem(label, key, icon, children) {
     return {
         key,
@@ -10,7 +10,7 @@ function getItem(label, key, icon, children) {
 }
 
 const _nav = [
-    getItem('Khóa học', 'course', <UserOutlined />, [
+    getItem('Khóa học', 'course', <UnorderedListOutlined />, [
         getItem('Danh sách khóa học', `courses`),
         getItem('Danh sách chủ đề', `topics`),
         getItem('Danh sách bài học', `lessons`),

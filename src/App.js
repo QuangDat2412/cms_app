@@ -4,7 +4,6 @@ import { notification, Spin } from 'antd';
 import { useSelector } from 'react-redux';
 import { OthersSelector } from 'src/redux/others/slice';
 import routes from './routes';
-import { useNavigate } from 'react-router-dom';
 import { authSelector } from 'src/redux/auth/auth.slice';
 // Containers
 const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'));
@@ -14,7 +13,6 @@ const Learning = React.lazy(() => import('./views/learning'));
 const CourseDetails = React.lazy(() => import('./views/courseDetail'));
 
 const App = () => {
-    const navigate = useNavigate();
     const toasrt = useSelector(OthersSelector.toasrt);
     const currentUser = useSelector(authSelector.currentUser);
     useEffect(() => {
