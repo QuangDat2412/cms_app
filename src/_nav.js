@@ -10,6 +10,7 @@ function getItem(label, key, icon, children) {
 }
 
 const _nav = [
+    getItem('Thống kê', `dashboard`, <UserOutlined />),
     getItem('Khóa học', 'course', <UnorderedListOutlined />, [
         getItem('Danh sách khóa học', `courses`),
         getItem('Danh sách chủ đề', `topics`),

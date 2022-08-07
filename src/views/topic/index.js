@@ -6,8 +6,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { courseActions, courseSelector } from 'src/redux/course/course.slice';
 import { topicActions, topicSelector } from 'src/redux/topic/topic.slice';
 import TableCustom from 'src/components/table';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+// import { CKEditor } from '@ckeditor/ckeditor5-react';
+// import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 const Topics = () => {
     const [form] = Form.useForm();
     const topicForm = { name: '', courseId: '', description: '', image: '', listLessons: [] };
@@ -58,18 +58,18 @@ const Topics = () => {
                 width: 150,
                 title: 'Khoá học',
             },
-            {
-                dataIndex: '',
-                width: 350,
-                title: 'Mô tả',
-                render: (a, b) => {
-                    return (
-                        <>
-                            <span dangerouslySetInnerHTML={{ __html: b.description }} className="wrapword"></span>
-                        </>
-                    );
-                },
-            },
+            // {
+            //     dataIndex: '',
+            //     width: 350,
+            //     title: 'Mô tả',
+            //     render: (a, b) => {
+            //         return (
+            //             <>
+            //                 <span dangerouslySetInnerHTML={{ __html: b.description }} className="wrapword"></span>
+            //             </>
+            //         );
+            //     },
+            // },
             {
                 title: 'Hoạt động',
                 dataIndex: '',
@@ -168,7 +168,7 @@ const Topics = () => {
                                 </Select>
                             </Form.Item>
                         </Col>
-                        <Col span={24}>
+                        {/* <Col span={24}>
                             <Form.Item
                                 name="description"
                                 label="Mô tả"
@@ -180,7 +180,7 @@ const Topics = () => {
                             >
                                 <CKEditor editor={ClassicEditor} />
                             </Form.Item>
-                        </Col>
+                        </Col> */}
                         <Col span={24}>
                             <Row justify="end">
                                 <Col>

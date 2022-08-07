@@ -5,7 +5,7 @@ const initialState = {
     toasrt: {},
     sidebarShow: true,
     sidebarUnfoldable: true,
-    options: JSON.parse(localStorage.getItem('options')),
+    options: JSON.parse(window.localStorage.getItem('options')),
 };
 
 const othersSlice = createSlice({
